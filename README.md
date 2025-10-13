@@ -1,18 +1,19 @@
-# Local LLM Deployment with SSO Authentication
+# Local LLM Deployment with SSO Authentication & HTTPS
 
-This Ansible playbook automates the deployment of a self-hosted Large Language Model (LLM) infrastructure with Single Sign-On (SSO) authentication using OIDC/SAML integration.
+This Ansible playbook automates the deployment of a production-ready, self-hosted Large Language Model (LLM) infrastructure with Single Sign-On (SSO) authentication using OIDC/SAML integration and automatic HTTPS certificate management.
 
 ## 🚀 Overview
 
-This solution deploys a complete LLM stack that includes:
+This solution deploys a complete, production-ready LLM stack that includes:
 
 - **Ollama**: Backend LLM engine for running open-source language models
 - **Open WebUI**: Modern web interface for interacting with the LLM
 - **OAuth2 Proxy**: SSO authentication layer using OIDC
-- **Nginx**: Reverse proxy for routing and request management
+- **Nginx**: Reverse proxy with HTTPS termination and automatic HTTP→HTTPS redirects
+- **Certbot**: Automatic Let's Encrypt SSL certificate provisioning and renewal
 - **Docker Compose**: Container orchestration for all services
 
-All services run in Docker containers and are secured behind SSO authentication, ensuring only authorized users can access the LLM.
+All services run in Docker containers and are secured behind SSO authentication with TLS encryption, ensuring only authorized users can access the LLM over HTTPS.
 
 ## 📋 Prerequisites
 
@@ -22,22 +23,27 @@ All services run in Docker containers and are secured behind SSO authentication,
   - 4GB+ RAM (8GB+ recommended for better model performance)
   - 20GB+ disk space for models
   - CPU with AVX/AVX2 support (recommended for faster inference)
-- **Network Access**: Target server must be able to:
-  - Pull Docker images from public registries
-  - Reach your OIDC provider endpoint
-  - Be accessible from your network (for web access)
+- **DNS & Network Requirements**:
+  - **DNS A record** pointing your FQDN to the server's public IP (required for Let's Encrypt)
+  - **Port 80** open to the internet (required for Let's Encrypt HTTP-01 challenge)
+  - **Port 443** open to the internet (for HTTPS access)
+  - Server must be able to:
+    - Pull Docker images from public registries
+    - Reach your OIDC provider endpoint
+    - Reach Let's Encrypt servers for certificate validation
 
 ## 🔑 Required Variables
 
 The playbook requires the following variables to be provided:
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `PUBLIC_FQDN` | Fully qualified domain name for accessing the service | `llm.example.com` |
-| `OIDC_ISSUER_URL` | Your OIDC provider's issuer URL | `https://auth.example.com/realms/myrealm` |
-| `OIDC_CLIENT_ID` | OAuth2 client ID registered with your OIDC provider | `local-llm-client` |
-| `OIDC_CLIENT_SECRET` | OAuth2 client secret | `super-secret-key-here` |
-| `COOKIE_SECRET` | (Optional) Secret for cookie encryption | Auto-generated if not provided |
+| Variable | Description | Example | Required |
+|----------|-------------|---------|----------|
+| `PUBLIC_FQDN` | Fully qualified domain name for accessing the service (must have DNS A record) | `llm.example.com` | **Yes** |
+| `OIDC_ISSUER_URL` | Your OIDC provider's issuer URL | `https://auth.example.com/realms/myrealm` | **Yes** |
+| `OIDC_CLIENT_ID` | OAuth2 client ID registered with your OIDC provider | `local-llm-client` | **Yes** |
+| `OIDC_CLIENT_SECRET` | OAuth2 client secret | `super-secret-key-here` | **Yes** |
+| `CERTBOT_EMAIL` | Email for Let's Encrypt certificate notifications | `admin@example.com` | No (recommended) |
+| `COOKIE_SECRET` | Secret for cookie encryption | Auto-generated if not provided | No |
 
 ### Setting Up Variables
 
@@ -49,7 +55,8 @@ ansible-playbook playbook.yml \
   -e PUBLIC_FQDN=llm.example.com \
   -e OIDC_ISSUER_URL=https://auth.example.com/... \
   -e OIDC_CLIENT_ID=your-client-id \
-  -e OIDC_CLIENT_SECRET=your-secret
+  -e OIDC_CLIENT_SECRET=your-secret \
+  -e CERTBOT_EMAIL=admin@example.com
 ```
 
 #### Option 2: Inventory File
@@ -63,6 +70,7 @@ PUBLIC_FQDN=llm.example.com
 OIDC_ISSUER_URL=https://auth.example.com/...
 OIDC_CLIENT_ID=your-client-id
 OIDC_CLIENT_SECRET=your-secret
+CERTBOT_EMAIL=admin@example.com
 ```
 
 #### Option 3: Group Vars File
@@ -72,30 +80,37 @@ PUBLIC_FQDN: llm.example.com
 OIDC_ISSUER_URL: https://auth.example.com/...
 OIDC_CLIENT_ID: your-client-id
 OIDC_CLIENT_SECRET: your-secret
+CERTBOT_EMAIL: admin@example.com
 ```
 
 ## 🎯 Usage
 
 ### Basic Deployment
 
-1. **Prepare your inventory**:
+1. **Ensure DNS is configured**:
+   - Create an A record pointing your FQDN to the server's public IP
+   - Wait for DNS propagation (use `nslookup` or `dig` to verify)
+
+2. **Prepare your inventory**:
 ```bash
 echo "your-server-ip ansible_user=ubuntu" > inventory.ini
 ```
 
-2. **Run the playbook**:
+3. **Run the playbook**:
 ```bash
 ansible-playbook -i inventory.ini playbook.yml \
   -e PUBLIC_FQDN=llm.example.com \
   -e OIDC_ISSUER_URL=https://auth.example.com/... \
   -e OIDC_CLIENT_ID=your-client-id \
-  -e OIDC_CLIENT_SECRET=your-secret
+  -e OIDC_CLIENT_SECRET=your-secret \
+  -e CERTBOT_EMAIL=admin@example.com
 ```
 
-3. **Access your LLM**:
-   - Navigate to `http://your-fqdn/` in your browser
-   - You'll be redirected to your SSO provider
-   - After authentication, you'll access the Open WebUI interface
+4. **Access your LLM**:
+   - Navigate to `https://your-fqdn/` in your browser (HTTPS enforced)
+   - HTTP requests are automatically redirected to HTTPS
+   - You'll be redirected to your SSO provider for authentication
+   - After authentication, you'll access the Open WebUI interface with a valid SSL certificate
 
 ### What the Playbook Does
 
@@ -113,11 +128,17 @@ The playbook executes the following steps automatically:
 
 3. **Service Deployment**:
    - Pulls latest Docker images
-   - Starts all containers
+   - Starts base services (nginx, oauth2-proxy, open-webui, ollama)
    - Downloads the `gemma3:4b` model automatically
    - Configures health checks and service dependencies
 
-4. **Model Download**:
+4. **SSL Certificate Management**:
+   - Obtains Let's Encrypt SSL certificate using HTTP-01 challenge
+   - Configures nginx with HTTPS termination
+   - Sets up automatic certificate renewal via cron job (runs daily at 3:15 AM)
+   - Restarts nginx to load the new certificates
+
+5. **Model Download**:
    - A dedicated container pulls the Gemma 3 (4B parameter) model
    - This happens automatically on first deployment
    - The model is stored in a persistent Docker volume
@@ -130,8 +151,9 @@ The playbook executes the following steps automatically:
 └────────────────────────────┬────────────────────────────────┘
                              │
                     ┌────────▼────────┐
-                    │   Nginx :80     │
-                    │  (Reverse Proxy)│
+                    │   Nginx :80/443 │
+                    │  (HTTPS Proxy + │
+                    │   HTTP→HTTPS)   │
                     └────────┬────────┘
                              │
                 ┌────────────┴────────────┐
@@ -146,20 +168,29 @@ The playbook executes the following steps automatically:
                                     │   :11434       │
                                     │ (LLM Engine)   │
                                     └────────────────┘
+                                    │
+                            ┌───────▼────────┐
+                            │   Certbot      │
+                            │ (Let's Encrypt)│
+                            └────────────────┘
 ```
 
 ### Service Details
 
-- **Nginx (Port 80)**: Entry point for all requests
+- **Nginx (Ports 80/443)**: HTTPS-enabled reverse proxy
+  - **Port 80**: Handles Let's Encrypt HTTP-01 challenges and redirects all other traffic to HTTPS
+  - **Port 443**: HTTPS termination with Let's Encrypt certificates
   - Routes `/` to Open WebUI (with auth)
   - Routes `/oauth2/` to OAuth2 Proxy
   - Routes `/ollama/` to Ollama API (with auth)
   - Handles WebSocket upgrades for real-time streaming
+  - Enforces HTTPS with automatic HTTP→HTTPS redirects
 
 - **OAuth2 Proxy (Port 4180)**: Authentication gateway
   - Validates all requests via OIDC
-  - Manages authentication cookies
+  - Manages authentication cookies (secure flag enabled)
   - Redirects unauthenticated users to SSO provider
+  - Configured for HTTPS-only operation
 
 - **Open WebUI (Port 8080)**: Web interface
   - Chat interface for LLM interaction
@@ -171,6 +202,11 @@ The playbook executes the following steps automatically:
   - Runs language models (default: Gemma 3 4B)
   - Provides REST API for inference
   - Manages model storage and loading
+
+- **Certbot**: SSL certificate management
+  - Obtains Let's Encrypt certificates on initial deployment
+  - Automatic renewal via cron job (daily at 3:15 AM)
+  - Stores certificates in persistent Docker volume
 
 ## 🔧 Configuration
 
@@ -206,18 +242,23 @@ For large model responses, you may need to adjust timeout values in the nginx co
 
 ## 🔒 Security Considerations
 
-1. **HTTPS Required for Production**: The current setup uses HTTP. For production:
-   - Configure TLS certificates (Let's Encrypt recommended)
-   - Update nginx to listen on port 443
-   - Enable HTTPS redirects
+1. **HTTPS Enforced**: The setup automatically configures HTTPS with Let's Encrypt certificates:
+   - All HTTP traffic is redirected to HTTPS
+   - SSL certificates are automatically renewed
+   - TLS 1.2+ with modern cipher suites
 
-2. **Cookie Security**: Cookies are marked secure in OAuth2 Proxy configuration
+2. **Cookie Security**: Cookies are marked secure and HTTP-only in OAuth2 Proxy configuration
 
-3. **Access Control**: All endpoints are protected by SSO authentication
+3. **Access Control**: All endpoints are protected by SSO authentication via OIDC
 
 4. **Secrets Management**: The `.env` file contains sensitive data and has restricted permissions (0600)
 
 5. **Network Isolation**: All services communicate over a private Docker network
+
+6. **Security Headers**: Nginx includes security headers:
+   - X-Frame-Options: SAMEORIGIN
+   - X-Content-Type-Options: nosniff
+   - Referrer-Policy: strict-origin-when-cross-origin
 
 ## 📊 Monitoring and Management
 
@@ -236,6 +277,16 @@ docker compose logs -f
 docker compose logs -f ollama
 docker compose logs -f open-webui
 docker compose logs -f oauth2-proxy
+docker compose logs -f nginx
+```
+
+### Check SSL Certificate Status
+```bash
+# Check certificate expiration
+docker compose exec nginx openssl x509 -in /etc/letsencrypt/live/your-domain.com/fullchain.pem -text -noout | grep "Not After"
+
+# Test certificate renewal
+/usr/local/bin/renew-llm-certs.sh
 ```
 
 ### Restart Services
@@ -261,10 +312,17 @@ docker exec -it ollama ollama list
 
 ## 🐛 Troubleshooting
 
+### SSL Certificate Issues
+- **Certificate not obtained**: Ensure DNS A record points to server and port 80 is accessible
+- **Certificate renewal fails**: Check cron job: `sudo crontab -l`
+- **HTTPS not working**: Verify certificate files exist: `docker compose exec nginx ls -la /etc/letsencrypt/live/`
+- **Mixed content errors**: Ensure all resources use HTTPS URLs
+
 ### Authentication Loop
 - Verify `PUBLIC_FQDN` matches your actual domain
 - Check `OAUTH2_PROXY_REDIRECT_URL` is registered in your OIDC provider
 - Ensure your OIDC provider is accessible from the server
+- Verify HTTPS redirect URL in OIDC provider matches `https://your-domain/oauth2/callback`
 
 ### Model Not Loading
 - Check available disk space: `df -h`
@@ -278,8 +336,9 @@ docker exec -it ollama ollama list
 
 ### Container Won't Start
 - Check logs: `docker compose logs [service-name]`
-- Verify port availability: `sudo netstat -tulpn | grep :80`
+- Verify port availability: `sudo netstat -tulpn | grep -E ':(80|443)'`
 - Ensure Docker service is running: `sudo systemctl status docker`
+- Check certificate volume mounts: `docker compose exec nginx ls -la /etc/letsencrypt/`
 
 ## 📝 Requirements File
 
@@ -321,5 +380,5 @@ For issues or questions:
 
 ---
 
-**Note**: This setup is designed for internal/development use. For production deployments, implement proper TLS/SSL, monitoring, backups, and security hardening.
+**Note**: This setup includes production-ready HTTPS with automatic certificate management. For additional production hardening, consider implementing monitoring, backups, and additional security measures.
 
