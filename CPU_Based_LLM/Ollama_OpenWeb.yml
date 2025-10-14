@@ -16,15 +16,18 @@
     - name: Wait for system to become reachable
       wait_for_connection:
         timeout: 300
+      tags: always
 
     - name: Gather facts
       setup:
+      tags: always
 
     - name: Update apt cache (Debian/Ubuntu)
       apt:
         update_cache: yes
         cache_valid_time: 3600
       when: ansible_os_family == "Debian"
+      tags: always
 
   tasks:
     # ============================================================
