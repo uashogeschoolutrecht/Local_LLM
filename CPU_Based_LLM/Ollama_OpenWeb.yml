@@ -1,0 +1,323 @@
+---
+- name: Deploy Ollama and Open WebUI with SRAM authentication
+  hosts: all
+  become: yes
+  gather_facts: true
+
+  vars:
+    app_dir: /opt/local-llm
+    ollama_model: "gemma2:2b"  # Lightweight model for CPU deployment
+    
+    # RSC Catalog variables (these will be provided by SURF Research Cloud)
+    # public_fqdn: "{{ rsc_nginx_service_url }}"  # Will be set by RSC
+    # The nginx plugin will handle SSL/TLS and basic auth setup
+
+  pre_tasks:
+    - name: Wait for system to become reachable
+      wait_for_connection:
+        timeout: 300
+
+    - name: Gather facts
+      setup:
+
+    - name: Update apt cache (Debian/Ubuntu)
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when: ansible_os_family == "Debian"
+
+  tasks:
+    # ============================================================
+    # Docker Installation
+    # ============================================================
+    - name: Install Docker prerequisites (Debian/Ubuntu)
+      apt:
+        name: 
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+          - python3-pip
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Add Docker GPG key (Debian/Ubuntu)
+      shell: |
+        install -m 0755 -d /etc/apt/keyrings
+        curl -fsSL https://download.docker.com/linux/{{ ansible_facts['distribution'] | lower }}/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+        chmod a+r /etc/apt/keyrings/docker.gpg
+      args:
+        creates: /etc/apt/keyrings/docker.gpg
+      when: ansible_os_family == "Debian"
+
+    - name: Add Docker repository (Debian/Ubuntu)
+      copy:
+        dest: /etc/apt/sources.list.d/docker.list
+        content: |
+          deb [arch={{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }} signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/{{ ansible_facts['distribution'] | lower }} {{ ansible_facts['distribution_release'] }} stable
+      when: ansible_os_family == "Debian"
+
+    - name: Install Docker Engine and Compose plugin
+      apt:
+        update_cache: yes
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Install Docker (RedHat/CentOS)
+      yum:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Ensure Docker service is running and enabled
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    # ============================================================
+    # Application Directory Setup
+    # ============================================================
+    - name: Create application directory
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+        mode: "0755"
+
+    # ============================================================
+    # Docker Compose Configuration
+    # ============================================================
+    - name: Write docker-compose.yml for Ollama and Open WebUI
+      copy:
+        dest: "{{ app_dir }}/docker-compose.yml"
+        mode: "0644"
+        content: |
+          version: "3.9"
+          
+          services:
+            ollama:
+              image: ollama/ollama:latest
+              container_name: ollama
+              restart: unless-stopped
+              ports:
+                - "127.0.0.1:11434:11434"
+              volumes:
+                - ollama-data:/root/.ollama
+              healthcheck:
+                test: ["CMD", "ollama", "list"]
+                interval: 10s
+                timeout: 5s
+                retries: 5
+                start_period: 10s
+
+            model-puller:
+              image: ollama/ollama:latest
+              container_name: ollama-model-puller
+              depends_on:
+                ollama:
+                  condition: service_healthy
+              environment:
+                - OLLAMA_HOST=http://ollama:11434
+              volumes:
+                - ollama-data:/root/.ollama
+              restart: "no"
+              command: ["pull", "{{ ollama_model }}"]
+
+            open-webui:
+              image: ghcr.io/open-webui/open-webui:main
+              container_name: open-webui
+              depends_on:
+                ollama:
+                  condition: service_healthy
+              environment:
+                - OLLAMA_BASE_URL=http://ollama:11434
+                - WEBUI_AUTH=False
+                - WEBUI_NAME=SURF Local LLM
+                - DEFAULT_USER_ROLE=user
+                - ENABLE_SIGNUP=False
+              volumes:
+                - open-webui-data:/app/backend/data
+              ports:
+                - "127.0.0.1:8080:8080"
+              restart: unless-stopped
+
+          volumes:
+            ollama-data:
+            open-webui-data:
+
+    # ============================================================
+    # Deploy Docker Compose Stack
+    # ============================================================
+    - name: Start Ollama and Open WebUI services
+      shell: |
+        cd {{ app_dir }}
+        docker compose up -d
+      args:
+        chdir: "{{ app_dir }}"
+
+    - name: Wait for Ollama to be healthy
+      shell: docker inspect -f {% raw %}'{{.State.Health.Status}}'{% endraw %} ollama
+      register: ollama_health
+      until: ollama_health.stdout == 'healthy'
+      retries: 30
+      delay: 10
+
+    - name: Wait for model to be pulled
+      shell: docker logs ollama-model-puller 2>&1 | grep -q "success"
+      register: model_pull
+      until: model_pull.rc == 0
+      retries: 60
+      delay: 10
+      failed_when: false
+
+    - name: Verify model is available
+      shell: docker exec ollama ollama list | grep -q "{{ ollama_model.split(':')[0] }}"
+      register: model_check
+      retries: 5
+      delay: 5
+      until: model_check.rc == 0
+
+    # ============================================================
+    # Nginx Configuration for SRAM Authentication
+    # ============================================================
+    - name: Create nginx app location config for Open WebUI
+      copy:
+        dest: /etc/nginx/app-location-conf.d/openwebui.conf
+        mode: 0644
+        content: |
+          # Open WebUI Main Application
+          location / {
+              error_page 401 = @custom_401;
+              auth_request /validate;
+              auth_request_set $username $upstream_http_username;
+              
+              proxy_pass http://127.0.0.1:8080;
+              proxy_http_version 1.1;
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection $connection_upgrade;
+              proxy_set_header REMOTE_USER $username;
+              
+              # Extended timeouts for LLM streaming
+              proxy_connect_timeout 600;
+              proxy_send_timeout 600;
+              proxy_read_timeout 600;
+              
+              # Disable buffering for streaming responses
+              proxy_buffering off;
+              proxy_request_buffering off;
+              chunked_transfer_encoding on;
+          }
+
+          # WebSocket support for real-time updates
+          location /ws {
+              error_page 401 = @custom_401;
+              auth_request /validate;
+              
+              proxy_pass http://127.0.0.1:8080/ws;
+              proxy_http_version 1.1;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection $connection_upgrade;
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              
+              proxy_read_timeout 86400;
+          }
+
+          # API endpoints for Open WebUI
+          location /api {
+              error_page 401 = @custom_401;
+              auth_request /validate;
+              auth_request_set $username $upstream_http_username;
+              
+              proxy_pass http://127.0.0.1:8080/api;
+              proxy_http_version 1.1;
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_set_header REMOTE_USER $username;
+              
+              proxy_connect_timeout 600;
+              proxy_send_timeout 600;
+              proxy_read_timeout 600;
+              proxy_buffering off;
+              proxy_request_buffering off;
+              chunked_transfer_encoding on;
+          }
+
+          # Ollama API endpoints (if needed for direct access)
+          location /ollama/ {
+              error_page 401 = @custom_401;
+              auth_request /validate;
+              
+              rewrite ^/ollama/(.*)$ /$1 break;
+              proxy_pass http://127.0.0.1:11434;
+              proxy_http_version 1.1;
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              
+              proxy_buffering off;
+              chunked_transfer_encoding on;
+          }
+      notify: reload nginx
+
+    # ============================================================
+    # Nginx Map for WebSocket Upgrade
+    # ============================================================
+    - name: Ensure map directive for WebSocket upgrade exists
+      blockinfile:
+        path: /etc/nginx/conf.d/map-upgrade.conf
+        create: yes
+        mode: 0644
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - WebSocket"
+        block: |
+          map $http_upgrade $connection_upgrade {
+              default upgrade;
+              ''      close;
+          }
+      notify: reload nginx
+
+  handlers:
+    - name: reload nginx
+      service:
+        name: nginx
+        state: reloaded
+
+  post_tasks:
+    - name: Display deployment information
+      debug:
+        msg:
+          - "=================================="
+          - "Ollama + Open WebUI Deployment Complete"
+          - "=================================="
+          - "Service URL: https://{{ rsc_nginx_service_url | default('your-domain.nl') }}"
+          - "Ollama Model: {{ ollama_model }}"
+          - ""
+          - "Authentication: SRAM SSO"
+          - "Users must log in with their institutional credentials"
+          - ""
+          - "Services running:"
+          - "  - Ollama: http://localhost:11434"
+          - "  - Open WebUI: http://localhost:8080"
+          - "  - Public access via nginx with SRAM auth"
+          - "=================================="
+
