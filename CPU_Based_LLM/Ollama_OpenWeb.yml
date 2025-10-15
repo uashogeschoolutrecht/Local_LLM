@@ -6,7 +6,10 @@
 
   vars:
     app_dir: /opt/local-llm
-    ollama_model: "gemma2:2b"  # Lightweight model for CPU deployment
+    ollama_models:
+      - gemma2:2b
+      - phi4-mini-reasoning:3.8b
+                
     
     # RSC Catalog variables (these will be provided by SURF Research Cloud)
     # public_fqdn: "{{ rsc_nginx_service_url }}"  # Will be set by RSC
@@ -121,19 +124,6 @@
                 retries: 5
                 start_period: 10s
 
-            model-puller:
-              image: ollama/ollama:latest
-              container_name: ollama-model-puller
-              depends_on:
-                ollama:
-                  condition: service_healthy
-              environment:
-                - OLLAMA_HOST=http://ollama:11434
-              volumes:
-                - ollama-data:/root/.ollama
-              restart: "no"
-              command: ["pull", "{{ ollama_model }}"]
-
             open-webui:
               image: ghcr.io/open-webui/open-webui:main
               container_name: open-webui
@@ -173,16 +163,17 @@
       retries: 30
       delay: 10
 
-    - name: Wait for model to be pulled
-      shell: docker logs ollama-model-puller 2>&1 | grep -q "success"
-      register: model_pull
-      until: model_pull.rc == 0
-      retries: 60
-      delay: 10
-      failed_when: false
+    - name: Pull Ollama models
+      shell: docker exec ollama ollama pull {{ item }}
+      loop: "{{ ollama_models }}"
+      register: model_pull_result
+      retries: 3
+      delay: 5
+      until: model_pull_result.rc == 0
 
-    - name: Verify model is available
-      shell: docker exec ollama ollama list | grep -q "{{ ollama_model.split(':')[0] }}"
+    - name: Verify models are available
+      shell: docker exec ollama ollama list | grep -q "{{ item.split(':')[0] }}"
+      loop: "{{ ollama_models }}"
       register: model_check
       retries: 5
       delay: 5
@@ -310,7 +301,7 @@
           - "Ollama + Open WebUI Deployment Complete"
           - "=================================="
           - "Service URL: https://{{ rsc_nginx_service_url | default('your-domain.nl') }}"
-          - "Ollama Model: {{ ollama_model }}"
+          - "Ollama Models: {{ ollama_models | join(', ') }}"
           - ""
           - "Authentication: SRAM SSO"
           - "Users must log in with their institutional credentials"
