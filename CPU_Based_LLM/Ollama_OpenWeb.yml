@@ -1,6 +1,6 @@
 ---
 - name: Deploy Ollama and Open WebUI with SRAM authentication
-  hosts: all
+  hosts: localhost
   become: yes
   gather_facts: true
 
