@@ -2,7 +2,13 @@
 
 ## Overview
 
-This Ansible playbook deploys Ollama (local LLM) and Open WebUI with SRAM (SURF Research Access Management) authentication integration for SURF Research Cloud.
+This repository contains Ansible playbooks for deploying Ollama (local LLM) and Open WebUI with SRAM (SURF Research Access Management) authentication integration for SURF Research Cloud.
+
+**Two versions available:**
+- **CPU-Based**: Optimized for CPU-only inference (suitable for smaller models)
+- **GPU-Based**: NVIDIA GPU-accelerated for faster inference (5-10x speedup)
+
+📊 **See [COMPARISON.md](COMPARISON.md) for detailed comparison and selection guide**
 
 ## Architecture
 
@@ -69,7 +75,9 @@ rsc_nginx_co_role: "member"
 ### Optional Variables (Can be customized)
 
 ```yaml
-ollama_model: "gemma2:2b"  # Change to any Ollama model
+ollama_models:              # List of models to download
+  - gemma2:2b
+  - phi4-mini-reasoning:3.8b
 app_dir: "/opt/local-llm"   # Installation directory
 ```
 
@@ -81,11 +89,15 @@ app_dir: "/opt/local-llm"   # Installation directory
    - SRAM OAuth2 authentication framework
    - Base authentication endpoints
 
-2. **Ollama_OpenWeb** runs second and sets up:
+2. **Ollama_OpenWeb (CPU or GPU)** runs second and sets up:
    - Docker environment
-   - Ollama + Open WebUI containers
+   - Ollama + Open WebUI containers (with or without GPU support)
    - Application-specific nginx configs
    - Triggers nginx reload to apply changes
+   
+   Choose one:
+   - `CPU_Based_LLM/Ollama_OpenWeb.yml` for CPU deployment
+   - `GPU_Based_LLM/Ollama_OpenWeb_GPU.yml` for GPU deployment
 
 ## Key Features
 
@@ -96,10 +108,12 @@ app_dir: "/opt/local-llm"   # Installation directory
 - ✅ All services bound to localhost (only nginx exposed)
 
 ### Performance
-- ✅ CPU-optimized Ollama deployment
-- ✅ Lightweight model (gemma2:2b) by default
+- ✅ CPU or GPU-optimized Ollama deployment options
+- ✅ Flexible model selection (gemma2:2b default)
+- ✅ Multiple model support (download several models at once)
 - ✅ Streaming response support for LLMs
 - ✅ WebSocket support for real-time updates
+- ✅ GPU version offers 5-10x faster inference
 
 ### User Experience
 - ✅ Single Sign-On via SRAM
@@ -110,11 +124,50 @@ app_dir: "/opt/local-llm"   # Installation directory
 ## File Structure
 
 ```
-CPU_Based_LLM/
-├── plugin-nginx (1).yml      # SURF's nginx + SRAM auth plugin
-├── Ollama_OpenWeb.yml         # Your Ollama + Open WebUI deployment
-└── README_INTEGRATION.md      # This file
+.
+├── CPU_Based_LLM/
+│   └── Ollama_OpenWeb.yml         # CPU-based Ollama deployment
+│
+├── GPU_Based_LLM/
+│   ├── Ollama_OpenWeb_GPU.yml     # GPU-accelerated Ollama deployment
+│
+├── README.md                      # Main documentation
+└── LICENSE
 ```
+
+## Choosing Between CPU and GPU
+
+### CPU Version (`CPU_Based_LLM/Ollama_OpenWeb.yml`)
+**Use when:**
+- No GPU available
+- Running smaller models (< 3B parameters)
+- Cost-sensitive deployment
+- Lower inference volume
+
+**Recommended for:**
+- Testing and development
+- Small teams (< 10 users)
+- Non-critical workloads
+
+### GPU Version (`GPU_Based_LLM/Ollama_OpenWeb_GPU.yml`)
+**Use when:**
+- NVIDIA GPU available
+- Running larger models (7B+ parameters)
+- High performance required
+- Multiple concurrent users
+
+**Recommended for:**
+- Production workloads
+- Research with large models
+- High inference volume
+- Latency-sensitive applications
+
+**Performance Comparison:**
+| Model | CPU Inference | GPU Inference | Speedup |
+|-------|---------------|---------------|---------|
+| gemma2:2b | 15-20 tok/s | 100-150 tok/s | 6-7x |
+| phi4-mini:3.8b | 10-15 tok/s | 80-120 tok/s | 8x |
+| llama3.1:8b | 5-8 tok/s | 60-90 tok/s | 10-12x |
 
 ## Testing the Deployment
 
@@ -123,29 +176,36 @@ After deployment, verify:
 1. **Docker containers are running**:
    ```bash
    docker ps
-   # Should show: ollama, open-webui, ollama-model-puller
+   # Should show: ollama, open-webui
    ```
 
-2. **Model is loaded**:
+2. **Models are loaded**:
    ```bash
    docker exec ollama ollama list
-   # Should show your model (gemma2:2b)
+   # Should show your models (gemma2:2b, phi4-mini-reasoning:3.8b, etc.)
    ```
 
-3. **nginx is running**:
+3. **GPU access (GPU version only)**:
+   ```bash
+   docker exec ollama nvidia-smi
+   # Should show GPU information and usage
+   ```
+
+4. **nginx is running**:
    ```bash
    systemctl status nginx
    ```
 
-4. **SSL certificate is valid**:
+5. **SSL certificate is valid**:
    ```bash
    ls -l /etc/letsencrypt/live/$(hostname -f)/
    ```
 
-5. **Access the service**:
+6. **Access the service**:
    - Navigate to `https://your-app.surf-hosted.nl`
    - Should redirect to SRAM login
    - After login, should show Open WebUI
+   - All downloaded models should be available in the dropdown
 
 ## Troubleshooting
 
@@ -178,13 +238,19 @@ docker compose restart
 
 ### Model Loading Issues
 
-If the model doesn't load:
+If models don't load:
 ```bash
-# Check model puller logs
-docker logs ollama-model-puller
+# Check Ollama logs
+docker logs ollama
 
-# Manually pull model
+# List available models
+docker exec ollama ollama list
+
+# Manually pull a model
 docker exec ollama ollama pull gemma2:2b
+
+# Remove a model to free space
+docker exec ollama ollama rm <model-name>
 ```
 
 ### nginx Issues
@@ -203,13 +269,20 @@ cat /etc/nginx/app-location-conf.d/openwebui.conf
 
 ## Customization
 
-### Using a Different Model
+### Using Multiple Models
 
-Edit `Ollama_OpenWeb.yml` and change:
+Both CPU and GPU versions now support downloading multiple models at once:
+
 ```yaml
 vars:
-  ollama_model: "llama2:7b"  # or any other Ollama model
+  ollama_models:
+    - gemma2:2b
+    - phi4-mini-reasoning:3.8b
+    - llama3.2:3b
+    # Add as many models as needed
 ```
+
+**Note:** Make sure you have sufficient disk space for multiple models.
 
 ### Adjusting Timeouts
 
@@ -242,10 +315,19 @@ To use this in SURF Research Cloud:
 
 ### Recommended VM Specifications
 
-- **CPU**: 4+ cores
-- **RAM**: 8+ GB (16 GB recommended for larger models)
+#### For CPU Version
+- **CPU**: 8+ cores (16+ for better performance)
+- **RAM**: 8-16 GB (depending on model size)
 - **Storage**: 50+ GB
 - **OS**: Ubuntu 22.04 or Debian 11+
+
+#### For GPU Version
+- **CPU**: 4+ cores
+- **RAM**: 16+ GB
+- **GPU**: NVIDIA GPU with 4GB+ VRAM (8GB+ recommended)
+- **Storage**: 100+ GB
+- **OS**: Ubuntu 22.04 or Debian 11+
+- **Drivers**: NVIDIA drivers (will be validated by playbook)
 
 ## Support
 
@@ -258,4 +340,5 @@ For issues related to:
 ## License
 
 This playbook is provided as-is for use with SURF Research Cloud.
+
 
