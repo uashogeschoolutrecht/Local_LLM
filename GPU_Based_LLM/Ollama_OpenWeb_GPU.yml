@@ -1,5 +1,5 @@
 ---
-- name: Deploy Ollama and Open WebUI with SRAM authentication
+- name: Deploy Ollama and Open WebUI with GPU support and SRAM authentication
   hosts: localhost
   become: yes
   gather_facts: true
@@ -8,6 +8,9 @@
     app_dir: /opt/local-llm
     ollama_models:
       - gemma2:2b
+      - phi4-mini-reasoning:3.8b
+      - qwen3:32b
+                
     
     # RSC Catalog variables (these will be provided by SURF Research Cloud)
     # public_fqdn: "{{ rsc_nginx_service_url }}"  # Will be set by RSC
@@ -28,6 +31,39 @@
       when: ansible_os_family == "Debian"
 
   tasks:
+    # ============================================================
+    # GPU Prerequisites Check
+    # ============================================================
+    - name: Check for NVIDIA GPU
+      shell: lspci | grep -i nvidia
+      register: nvidia_check
+      failed_when: false
+      changed_when: false
+
+    - name: Fail if no NVIDIA GPU detected
+      fail:
+        msg: "No NVIDIA GPU detected. This playbook requires an NVIDIA GPU."
+      when: nvidia_check.rc != 0
+
+    - name: Check if NVIDIA drivers are installed
+      shell: nvidia-smi
+      register: nvidia_smi_check
+      failed_when: false
+      changed_when: false
+
+    - name: Display NVIDIA driver status
+      debug:
+        msg: "NVIDIA drivers {{ 'are installed' if nvidia_smi_check.rc == 0 else 'are NOT installed' }}"
+
+    - name: Warning if NVIDIA drivers not found
+      debug:
+        msg: 
+          - "WARNING: nvidia-smi not found. NVIDIA drivers may not be installed."
+          - "Please install NVIDIA drivers manually if needed."
+          - "For Ubuntu: sudo ubuntu-drivers autoinstall"
+          - "Continuing with playbook assuming drivers will be available..."
+      when: nvidia_smi_check.rc != 0
+
     # ============================================================
     # Docker Installation
     # ============================================================
@@ -88,6 +124,68 @@
         enabled: yes
 
     # ============================================================
+    # NVIDIA Container Toolkit Installation
+    # ============================================================
+    - name: Check if NVIDIA Container Toolkit is installed
+      shell: dpkg -l | grep nvidia-container-toolkit
+      register: nvidia_toolkit_check
+      failed_when: false
+      changed_when: false
+      when: ansible_os_family == "Debian"
+
+    - name: Add NVIDIA Container Toolkit GPG key (Debian/Ubuntu)
+      shell: |
+        curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+      args:
+        creates: /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+      when: ansible_os_family == "Debian" and nvidia_toolkit_check.rc != 0
+
+    - name: Add NVIDIA Container Toolkit repository (Debian/Ubuntu)
+      shell: |
+        curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+          sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+          tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+      when: ansible_os_family == "Debian" and nvidia_toolkit_check.rc != 0
+
+    - name: Update apt cache after adding NVIDIA repository
+      apt:
+        update_cache: yes
+      when: ansible_os_family == "Debian" and nvidia_toolkit_check.rc != 0
+
+    - name: Install NVIDIA Container Toolkit (Debian/Ubuntu)
+      apt:
+        name: nvidia-container-toolkit
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Configure Docker to use NVIDIA runtime
+      shell: |
+        nvidia-ctk runtime configure --runtime=docker
+      notify: restart docker
+
+    - name: Flush handlers to restart Docker if needed
+      meta: flush_handlers
+
+    # ============================================================
+    # Verify GPU Access in Docker
+    # ============================================================
+    - name: Test GPU access in Docker
+      shell: docker run --rm --gpus all nvidia/cuda:12.0.0-base-ubuntu22.04 nvidia-smi
+      register: gpu_test
+      failed_when: false
+      changed_when: false
+
+    - name: Display GPU test results
+      debug:
+        var: gpu_test.stdout_lines
+      when: gpu_test.rc == 0
+
+    - name: Fail if GPU not accessible in Docker
+      fail:
+        msg: "GPU is not accessible in Docker containers. Please check NVIDIA drivers and Container Toolkit installation."
+      when: gpu_test.rc != 0
+
+    # ============================================================
     # Application Directory Setup
     # ============================================================
     - name: Create application directory
@@ -97,9 +195,9 @@
         mode: "0755"
 
     # ============================================================
-    # Docker Compose Configuration
+    # Docker Compose Configuration with GPU Support
     # ============================================================
-    - name: Write docker-compose.yml for Ollama and Open WebUI
+    - name: Write docker-compose.yml for Ollama and Open WebUI with GPU
       copy:
         dest: "{{ app_dir }}/docker-compose.yml"
         mode: "0644"
@@ -115,6 +213,13 @@
                 - "127.0.0.1:11434:11434"
               volumes:
                 - ollama-data:/root/.ollama
+              deploy:
+                resources:
+                  reservations:
+                    devices:
+                      - driver: nvidia
+                        count: all
+                        capabilities: [gpu]
               healthcheck:
                 test: ["CMD", "ollama", "list"]
                 interval: 10s
@@ -131,7 +236,7 @@
               environment:
                 - OLLAMA_BASE_URL=http://ollama:11434
                 - WEBUI_AUTH=False
-                - WEBUI_NAME=SURF Local LLM
+                - WEBUI_NAME=SURF Local LLM (GPU)
                 - DEFAULT_USER_ROLE=user
                 - ENABLE_SIGNUP=False
               volumes:
@@ -147,7 +252,7 @@
     # ============================================================
     # Deploy Docker Compose Stack
     # ============================================================
-    - name: Start Ollama and Open WebUI services
+    - name: Start Ollama and Open WebUI services with GPU
       shell: |
         cd {{ app_dir }}
         docker compose up -d
@@ -160,6 +265,17 @@
       until: ollama_health.stdout == 'healthy'
       retries: 30
       delay: 10
+
+    - name: Verify GPU is available in Ollama container
+      shell: docker exec ollama nvidia-smi
+      register: ollama_gpu_check
+      failed_when: false
+      changed_when: false
+
+    - name: Display Ollama GPU status
+      debug:
+        var: ollama_gpu_check.stdout_lines
+      when: ollama_gpu_check.rc == 0
 
     - name: Pull Ollama models
       shell: docker exec ollama ollama pull {{ item }}
@@ -286,6 +402,11 @@
       notify: reload nginx
 
   handlers:
+    - name: restart docker
+      service:
+        name: docker
+        state: restarted
+
     - name: reload nginx
       service:
         name: nginx
@@ -296,17 +417,21 @@
       debug:
         msg:
           - "=================================="
-          - "Ollama + Open WebUI Deployment Complete"
+          - "Ollama + Open WebUI GPU Deployment Complete"
           - "=================================="
           - "Service URL: https://{{ rsc_nginx_service_url | default('your-domain.nl') }}"
           - "Ollama Models: {{ ollama_models | join(', ') }}"
+          - "GPU Acceleration: ENABLED"
           - ""
           - "Authentication: SRAM SSO"
           - "Users must log in with their institutional credentials"
           - ""
           - "Services running:"
-          - "  - Ollama: http://localhost:11434"
+          - "  - Ollama (GPU): http://localhost:11434"
           - "  - Open WebUI: http://localhost:8080"
           - "  - Public access via nginx with SRAM auth"
+          - ""
+          - "GPU Status: Check with 'docker exec ollama nvidia-smi'"
           - "=================================="
+
 
