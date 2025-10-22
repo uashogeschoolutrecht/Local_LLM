@@ -8,7 +8,6 @@
     app_dir: /opt/local-llm
     ollama_models:
       - mistral:7b
-      - gemma3:27b
       - gpt-oss:20b
                 
     
@@ -59,71 +58,10 @@
       debug:
         msg: 
           - "WARNING: nvidia-smi not found. NVIDIA drivers may not be installed."
-          - "Installing NVIDIA drivers now..."
+          - "Please install NVIDIA drivers manually if needed."
+          - "For Ubuntu: sudo ubuntu-drivers autoinstall"
+          - "Continuing with playbook assuming drivers will be available..."
       when: nvidia_smi_check.rc != 0
-
-    # ============================================================
-    # NVIDIA Driver Installation
-    # ============================================================
-    - name: Install NVIDIA driver prerequisites (Debian/Ubuntu)
-      apt:
-        name:
-          - ubuntu-drivers-common
-          - build-essential
-        state: present
-      when: ansible_os_family == "Debian" and nvidia_smi_check.rc != 0
-
-    - name: Auto-install recommended NVIDIA drivers
-      command: ubuntu-drivers autoinstall
-      when: ansible_os_family == "Debian" and nvidia_smi_check.rc != 0
-      register: nvidia_install
-      changed_when: true
-
-    - name: Display driver installation message
-      debug:
-        msg:
-          - "NVIDIA drivers have been installed."
-          - "A reboot is required to load the drivers."
-          - "Initiating reboot now..."
-      when: nvidia_smi_check.rc != 0
-
-    - name: Reboot system to load NVIDIA drivers (async)
-      shell: "sleep 2 && shutdown -r now 'Rebooting to load NVIDIA drivers'"
-      async: 1
-      poll: 0
-      when: nvidia_smi_check.rc != 0
-      ignore_errors: yes
-
-    - name: Wait for system to go down
-      pause:
-        seconds: 15
-      when: nvidia_smi_check.rc != 0
-
-    - name: Wait for system to come back online
-      wait_for_connection:
-        timeout: 600
-        delay: 15
-      when: nvidia_smi_check.rc != 0
-
-    - name: Gather facts after reboot
-      setup:
-      when: nvidia_smi_check.rc != 0
-
-    - name: Verify NVIDIA drivers loaded after reboot
-      shell: nvidia-smi
-      register: nvidia_smi_verify
-      changed_when: false
-      when: nvidia_smi_check.rc != 0
-
-    - name: Display NVIDIA driver information
-      debug:
-        var: nvidia_smi_verify.stdout_lines
-      when: nvidia_smi_check.rc != 0 and nvidia_smi_verify.rc == 0
-
-    - name: Fail if NVIDIA drivers still not working after installation
-      fail:
-        msg: "NVIDIA drivers failed to load after installation and reboot. Please check system logs."
-      when: nvidia_smi_check.rc != 0 and nvidia_smi_verify.rc != 0
 
     # ============================================================
     # Docker Installation
