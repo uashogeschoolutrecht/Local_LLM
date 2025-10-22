@@ -84,25 +84,29 @@
         msg:
           - "NVIDIA drivers have been installed."
           - "A reboot is required to load the drivers."
-          - "The system will reboot in 10 seconds..."
+          - "Initiating reboot now..."
       when: nvidia_smi_check.rc != 0
 
-    - name: Wait before reboot
+    - name: Reboot system to load NVIDIA drivers (async)
+      shell: "sleep 2 && shutdown -r now 'Rebooting to load NVIDIA drivers'"
+      async: 1
+      poll: 0
+      when: nvidia_smi_check.rc != 0
+      ignore_errors: yes
+
+    - name: Wait for system to go down
       pause:
-        seconds: 10
-      when: nvidia_smi_check.rc != 0
-
-    - name: Reboot to load NVIDIA drivers
-      reboot:
-        msg: "Rebooting to load NVIDIA GPU drivers"
-        reboot_timeout: 600
-        post_reboot_delay: 30
+        seconds: 15
       when: nvidia_smi_check.rc != 0
 
     - name: Wait for system to come back online
       wait_for_connection:
         timeout: 600
-        delay: 30
+        delay: 15
+      when: nvidia_smi_check.rc != 0
+
+    - name: Gather facts after reboot
+      setup:
       when: nvidia_smi_check.rc != 0
 
     - name: Verify NVIDIA drivers loaded after reboot
