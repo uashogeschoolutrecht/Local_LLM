@@ -7,9 +7,9 @@
   vars:
     app_dir: /opt/local-llm
     ollama_models:
-      - gemma2:2b
-      - phi4-mini-reasoning:3.8b
-      - qwen3:32b
+      - mistral:7b
+      - gemma3:27b
+      - gpt-oss:20b
                 
     
     # RSC Catalog variables (these will be provided by SURF Research Cloud)
