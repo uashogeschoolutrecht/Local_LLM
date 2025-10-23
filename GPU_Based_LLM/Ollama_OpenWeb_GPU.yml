@@ -236,11 +236,13 @@
                 - OLLAMA_BASE_URL=http://ollama:11434
                 # Enable authentication and use REMOTE_USER header from SRAM SSO
                 - WEBUI_AUTH=True
-                - WEBUI_AUTH_TRUSTED_EMAIL_HEADER=REMOTE_USER
+                - WEBUI_AUTH_TRUSTED_EMAIL_HEADER=Remote-User
                 - ENABLE_LOGIN_FORM=False
                 - ENABLE_SIGNUP=False
                 - WEBUI_NAME=SURF Local LLM (GPU)
-                - DEFAULT_USER_ROLE=user
+                # Set default role to admin to avoid permission issues
+                # Each user authenticated via SRAM will have full access
+                - DEFAULT_USER_ROLE=admin
                 # Enable user isolation - each user gets their own chats
                 - USER_PERMISSIONS_CHAT_DELETION=True
                 - USER_PERMISSIONS_CHAT_EDIT=True
@@ -327,8 +329,8 @@
               proxy_set_header Connection $connection_upgrade;
               
               # Pass SRAM username to Open WebUI for user isolation
-              proxy_set_header REMOTE_USER $username;
-              proxy_set_header X-Remote-User $username;
+              # Using Remote-User header format expected by Open WebUI
+              proxy_set_header Remote-User $username;
               
               # Extended timeouts for LLM streaming
               proxy_connect_timeout 600;
@@ -370,7 +372,9 @@
               proxy_set_header X-Real-IP $remote_addr;
               proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
               proxy_set_header X-Forwarded-Proto $scheme;
-              proxy_set_header REMOTE_USER $username;
+              
+              # Pass SRAM username for API authentication
+              proxy_set_header Remote-User $username;
               
               proxy_connect_timeout 600;
               proxy_send_timeout 600;
