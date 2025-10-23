@@ -8,7 +8,7 @@
     app_dir: /opt/local-llm
     ollama_models:
       - mistral:7b
-      - gpt-oss:20b
+      #- gpt-oss:20b
                 
     
     # RSC Catalog variables (these will be provided by SURF Research Cloud)
