@@ -234,10 +234,17 @@
                   condition: service_healthy
               environment:
                 - OLLAMA_BASE_URL=http://ollama:11434
-                - WEBUI_AUTH=False
+                # Enable authentication and use REMOTE_USER header from SRAM SSO
+                - WEBUI_AUTH=True
+                - WEBUI_AUTH_TRUSTED_EMAIL_HEADER=REMOTE_USER
+                - ENABLE_LOGIN_FORM=False
+                - ENABLE_SIGNUP=False
                 - WEBUI_NAME=SURF Local LLM (GPU)
                 - DEFAULT_USER_ROLE=user
-                - ENABLE_SIGNUP=False
+                # Enable user isolation - each user gets their own chats
+                - USER_PERMISSIONS_CHAT_DELETION=True
+                - USER_PERMISSIONS_CHAT_EDIT=True
+                - USER_PERMISSIONS_CHAT_TEMPORARY=False
               volumes:
                 - open-webui-data:/app/backend/data
               ports:
@@ -279,6 +286,8 @@
     - name: Pull Ollama models
       shell: docker exec ollama ollama pull {{ item }}
       loop: "{{ ollama_models }}"
+      async: 3600  # Allow up to 1 hour per model download
+      poll: 30     # Check download status every 30 seconds
       register: model_pull_result
       retries: 3
       delay: 5
@@ -287,9 +296,11 @@
     - name: Verify models are available
       shell: docker exec ollama ollama list | grep -q "{{ item.split(':')[0] }}"
       loop: "{{ ollama_models }}"
+      async: 60    # Allow up to 1 minute for verification
+      poll: 10     # Check verification status every 10 seconds
       register: model_check
       retries: 5
-      delay: 5
+      delay: 10
       until: model_check.rc == 0
 
     # ============================================================
@@ -314,7 +325,10 @@
               proxy_set_header X-Forwarded-Proto $scheme;
               proxy_set_header Upgrade $http_upgrade;
               proxy_set_header Connection $connection_upgrade;
+              
+              # Pass SRAM username to Open WebUI for user isolation
               proxy_set_header REMOTE_USER $username;
+              proxy_set_header X-Remote-User $username;
               
               # Extended timeouts for LLM streaming
               proxy_connect_timeout 600;
