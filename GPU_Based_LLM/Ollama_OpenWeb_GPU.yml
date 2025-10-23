@@ -10,7 +10,6 @@
       - mistral:7b
       #- gpt-oss:20b
     # Set to true to reset Open WebUI database (fixes auth issues but deletes chat history)
-    reset_openwebui_db: true
                 
     
     # RSC Catalog variables (these will be provided by SURF Research Cloud)
