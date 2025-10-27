@@ -9,7 +9,6 @@
     ollama_models:
       - mistral:7b
       #- gpt-oss:20b
-    # Set to true to reset Open WebUI database (fixes auth issues but deletes chat history)
                 
     
     # RSC Catalog variables (these will be provided by SURF Research Cloud)
@@ -235,22 +234,10 @@
                   condition: service_healthy
               environment:
                 - OLLAMA_BASE_URL=http://ollama:11434
-                # Enable authentication and use REMOTE_USER header from SRAM SSO
-                - WEBUI_AUTH=True
-                - WEBUI_AUTH_TRUSTED_EMAIL_HEADER=Remote-User
-                - ENABLE_LOGIN_FORM=False
-                - ENABLE_SIGNUP=False
+                - WEBUI_AUTH=False
                 - WEBUI_NAME=SURF Local LLM (GPU)
-                # Set default role to admin to avoid permission issues
-                # Each user authenticated via SRAM will have full access
-                - DEFAULT_USER_ROLE=admin
-                # Disable admin-only access restriction
-                - ENABLE_ADMIN_EXPORT=True
-                - ENABLE_ADMIN_CHAT_ACCESS=False
-                # Enable user isolation - each user gets their own chats
-                - USER_PERMISSIONS_CHAT_DELETION=True
-                - USER_PERMISSIONS_CHAT_EDIT=True
-                - USER_PERMISSIONS_CHAT_TEMPORARY=False
+                - DEFAULT_USER_ROLE=user
+                - ENABLE_SIGNUP=False
               volumes:
                 - open-webui-data:/app/backend/data
               ports:
@@ -264,25 +251,10 @@
     # ============================================================
     # Deploy Docker Compose Stack
     # ============================================================
-    - name: Stop existing containers to apply new configuration
-      shell: |
-        cd {{ app_dir }}
-        docker compose down
-      args:
-        chdir: "{{ app_dir }}"
-      failed_when: false
-      changed_when: false
-
-    - name: Remove Open WebUI database volume to reset authentication
-      shell: docker volume rm open-webui-data
-      when: reset_openwebui_db | default(false) | bool
-      failed_when: false
-      changed_when: false
-
     - name: Start Ollama and Open WebUI services with GPU
       shell: |
         cd {{ app_dir }}
-        docker compose up -d --force-recreate
+        docker compose up -d
       args:
         chdir: "{{ app_dir }}"
 
@@ -307,8 +279,6 @@
     - name: Pull Ollama models
       shell: docker exec ollama ollama pull {{ item }}
       loop: "{{ ollama_models }}"
-      async: 3600  # Allow up to 1 hour per model download
-      poll: 30     # Check download status every 30 seconds
       register: model_pull_result
       retries: 3
       delay: 5
@@ -317,30 +287,10 @@
     - name: Verify models are available
       shell: docker exec ollama ollama list | grep -q "{{ item.split(':')[0] }}"
       loop: "{{ ollama_models }}"
-      async: 60    # Allow up to 1 minute for verification
-      poll: 10     # Check verification status every 10 seconds
       register: model_check
       retries: 5
-      delay: 10
-      until: model_check.rc == 0
-
-    - name: Wait for Open WebUI to be ready
-      shell: docker logs open-webui 2>&1 | grep -q "Application startup complete"
-      register: webui_ready
-      until: webui_ready.rc == 0
-      retries: 30
       delay: 5
-      failed_when: false
-      changed_when: false
-
-    - name: Display Open WebUI logs for debugging
-      shell: docker logs --tail 50 open-webui
-      register: webui_logs
-      changed_when: false
-
-    - name: Show Open WebUI status
-      debug:
-        msg: "Open WebUI is {{ 'ready' if webui_ready.rc == 0 else 'still starting' }}"
+      until: model_check.rc == 0
 
     # ============================================================
     # Nginx Configuration for SRAM Authentication
@@ -364,10 +314,7 @@
               proxy_set_header X-Forwarded-Proto $scheme;
               proxy_set_header Upgrade $http_upgrade;
               proxy_set_header Connection $connection_upgrade;
-              
-              # Pass SRAM username to Open WebUI for user isolation
-              # Using Remote-User header format expected by Open WebUI
-              proxy_set_header Remote-User $username;
+              proxy_set_header REMOTE_USER $username;
               
               # Extended timeouts for LLM streaming
               proxy_connect_timeout 600;
@@ -409,9 +356,7 @@
               proxy_set_header X-Real-IP $remote_addr;
               proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
               proxy_set_header X-Forwarded-Proto $scheme;
-              
-              # Pass SRAM username for API authentication
-              proxy_set_header Remote-User $username;
+              proxy_set_header REMOTE_USER $username;
               
               proxy_connect_timeout 600;
               proxy_send_timeout 600;
