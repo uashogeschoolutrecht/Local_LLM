@@ -106,7 +106,7 @@
     # ============================================================
     # Docker Compose Configuration
     # ============================================================
-    - name: Write docker-compose.yml for Label Studio
+    - name: Write docker-compose.yml for Label Studio with PostgreSQL
       copy:
         dest: "{{ app_dir }}/docker-compose.yml"
         mode: "0644"
@@ -114,21 +114,50 @@
           version: "3.9"
           
           services:
+            # ===========================================
+            # PostgreSQL Database
+            # ===========================================
+            postgres:
+              image: postgres:15-alpine
+              container_name: label-studio-postgres
+              restart: unless-stopped
+              environment:
+                - POSTGRES_USER=labelstudio
+                - POSTGRES_PASSWORD=labelstudio_password
+                - POSTGRES_DB=labelstudio
+              volumes:
+                - postgres-data:/var/lib/postgresql/data
+              healthcheck:
+                test: ["CMD-SHELL", "pg_isready -U labelstudio -d labelstudio"]
+                interval: 5s
+                timeout: 5s
+                retries: 5
+                start_period: 10s
+
+            # ===========================================
+            # Label Studio Application
+            # ===========================================
             label-studio:
               image: heartexlabs/label-studio:{{ label_studio_version }}
               container_name: label-studio
               restart: unless-stopped
+              depends_on:
+                postgres:
+                  condition: service_healthy
               ports:
                 - "127.0.0.1:8080:8080"
               volumes:
                 - label-studio-data:/label-studio/data
               environment:
                 # ===========================================
-                # Database - Force SQLite (not PostgreSQL)
+                # PostgreSQL Database Connection
                 # ===========================================
                 - DJANGO_DB=default
-                - POSTGRE_HOST=
-                - DATABASE_URL=sqlite:////label-studio/data/label_studio.sqlite3
+                - POSTGRE_NAME=labelstudio
+                - POSTGRE_USER=labelstudio
+                - POSTGRE_PASSWORD=labelstudio_password
+                - POSTGRE_HOST=postgres
+                - POSTGRE_PORT=5432
                 
                 # ===========================================
                 # Disable internal authentication - SRAM handles auth
@@ -139,27 +168,39 @@
                 # Application settings
                 # ===========================================
                 - LABEL_STUDIO_HOST={{ '${LABEL_STUDIO_HOST:-http://localhost:8080}' }}
+<<<<<<< HEAD
+                # Default role for users
+=======
+>>>>>>> 097943a01fd98036565525fff5606d4e8fe65f97
                 - LABEL_STUDIO_USER_DEFAULT_ROLE=annotator
 
           volumes:
+            postgres-data:
             label-studio-data:
 
     # ============================================================
     # Deploy Docker Compose Stack
     # ============================================================
-    - name: Start Label Studio service
+    - name: Start PostgreSQL and Label Studio services
       shell: |
         cd {{ app_dir }}
         docker compose up -d
       args:
         chdir: "{{ app_dir }}"
 
+    - name: Wait for PostgreSQL container to be healthy
+      shell: docker inspect -f {% raw %}'{{.State.Health.Status}}'{% endraw %} label-studio-postgres
+      register: postgres_health
+      until: postgres_health.stdout == 'healthy'
+      retries: 30
+      delay: 5
+
     - name: Wait for Label Studio container to be running
       shell: docker inspect -f {% raw %}'{{.State.Running}}'{% endraw %} label-studio
       register: container_running
       until: container_running.stdout == 'true'
-      retries: 10
-      delay: 5
+      retries: 30
+      delay: 10
 
     - name: Wait for Label Studio to respond on port 8080
       wait_for:
@@ -325,8 +366,11 @@
           - "Users must log in with their institutional credentials"
           - ""
           - "Services running:"
+          - "  - PostgreSQL: label-studio-postgres (port 5432)"
           - "  - Label Studio: http://localhost:8080"
           - "  - Public access via nginx with SRAM auth"
           - ""
-          - "Data stored in: Docker volume 'label-studio-data'"
+          - "Data stored in Docker volumes:"
+          - "  - postgres-data (database)"
+          - "  - label-studio-data (uploads/files)"
           - "=================================="
