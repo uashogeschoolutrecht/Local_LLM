@@ -1,12 +1,18 @@
-# Ollama + Open WebUI Integration with SURF Research Cloud (SRAM Authentication)
+# SURF Research Cloud Applications with SRAM Authentication
 
 ## Overview
 
-This repository contains Ansible playbooks for deploying Ollama (local LLM) and Open WebUI with SRAM (SURF Research Access Management) authentication integration for SURF Research Cloud.
+This repository contains Ansible playbooks for deploying research applications with SRAM (SURF Research Access Management) authentication integration for SURF Research Cloud.
 
-**Two versions available:**
+**Available Applications:**
+
+### 🤖 Ollama + Open WebUI (Local LLM)
 - **CPU-Based**: Optimized for CPU-only inference (suitable for smaller models)
 - **GPU-Based**: NVIDIA GPU-accelerated for faster inference (5-10x speedup)
+
+### 🏷️ Label Studio (Data Labeling Platform)
+- Open-source data labeling for LLM fine-tuning, RLHF, and AI evaluation
+- Supports images, text, audio, video, and time series data
 
 📊 **See [COMPARISON.md](COMPARISON.md) for detailed comparison and selection guide**
 
@@ -129,13 +135,37 @@ app_dir: "/opt/local-llm"   # Installation directory
 │   └── Ollama_OpenWeb.yml         # CPU-based Ollama deployment
 │
 ├── GPU_Based_LLM/
-│   ├── Ollama_OpenWeb_GPU.yml     # GPU-accelerated Ollama deployment
+│   └── Ollama_OpenWeb_GPU.yml     # GPU-accelerated Ollama deployment
+│
+├── LabelStudio/
+│   ├── LabelStudio_SRAM.yml       # Label Studio deployment
+│   └── README.md                  # Label Studio documentation
 │
 ├── README.md                      # Main documentation
 └── LICENSE
 ```
 
-## Choosing Between CPU and GPU
+## Application Selection Guide
+
+### Label Studio (`LabelStudio/LabelStudio_SRAM.yml`)
+**Use for:**
+- Data labeling for ML/AI training
+- LLM fine-tuning and RLHF workflows
+- AI model evaluation and benchmarking
+- Multi-modal annotation (text, images, audio, video)
+- Collaborative labeling projects
+
+**Features:**
+- Flexible labeling templates
+- ML-assisted labeling
+- Cloud storage integration (S3, GCS)
+- Team collaboration support
+
+📖 **See [LabelStudio/README.md](LabelStudio/README.md) for detailed documentation**
+
+---
+
+## Choosing Between CPU and GPU (Ollama)
 
 ### CPU Version (`CPU_Based_LLM/Ollama_OpenWeb.yml`)
 **Use when:**
