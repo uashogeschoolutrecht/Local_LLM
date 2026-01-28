@@ -124,14 +124,21 @@
                 - label-studio-data:/label-studio/data
               environment:
                 # ===========================================
+                # Database - Force SQLite (not PostgreSQL)
+                # ===========================================
+                - DJANGO_DB=default
+                - POSTGRE_HOST=
+                - DATABASE_URL=sqlite:////label-studio/data/label_studio.sqlite3
+                
+                # ===========================================
                 # Disable internal authentication - SRAM handles auth
                 # ===========================================
                 - LABEL_STUDIO_DISABLE_SIGNUP_WITHOUT_LINK=true
-                # Trust the proxy headers
+                
+                # ===========================================
+                # Application settings
+                # ===========================================
                 - LABEL_STUDIO_HOST={{ '${LABEL_STUDIO_HOST:-http://localhost:8080}' }}
-                # Database settings (SQLite by default)
-                - DJANGO_DB=default
-                # Default role for users
                 - LABEL_STUDIO_USER_DEFAULT_ROLE=annotator
 
           volumes:
