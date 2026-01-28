@@ -169,13 +169,13 @@
                 # Security & CSRF Settings
                 # ===========================================
                 - LABEL_STUDIO_DISABLE_SIGNUP_WITHOUT_LINK=true
-                - CSRF_TRUSTED_ORIGINS=https://*.surf-hosted.nl,https://*.src.surf-hosted.nl
-                - DJANGO_CSRF_TRUSTED_ORIGINS=https://*.surf-hosted.nl,https://*.src.surf-hosted.nl
+                - CSRF_TRUSTED_ORIGINS=https://{{ rsc_nginx_service_url | default('localhost') }},https://*.surf-hosted.nl,https://*.src.surf-hosted.nl
+                - DJANGO_CSRF_TRUSTED_ORIGINS=https://{{ rsc_nginx_service_url | default('localhost') }},https://*.surf-hosted.nl,https://*.src.surf-hosted.nl
                 
                 # ===========================================
                 # Application settings
                 # ===========================================
-                - LABEL_STUDIO_HOST={{ '${LABEL_STUDIO_HOST:-https://}' }}{{ rsc_nginx_service_url | default('localhost:8080') }}
+                - LABEL_STUDIO_HOST=https://{{ rsc_nginx_service_url | default('localhost:8080') }}
                 - LABEL_STUDIO_USER_DEFAULT_ROLE=annotator
 
           volumes:
