@@ -1,0 +1,1152 @@
+2026-01-28 10:14:48+0100 INFO     Running WorkspaceAction (ID: 3ee84016-f09f-4eab-a469-78b0055aadb9) to create workspace 31b09c15-8a87-4a0c-93ef-ad92eba15b6d
+2026-01-28 10:14:48+0100 INFO     Creating resource
+2026-01-28 10:14:51+0100 INFO     Cloning git vm-openstack v5.1.0 ...
+2026-01-28 10:14:54+0100 INFO     Cloned vm-openstack v5.1.0
+2026-01-28 10:14:54+0100 INFO     Generating Terraform backend file
+2026-01-28 10:14:55+0100 INFO     Generating terraform parameters ...
+2026-01-28 10:14:55+0100 INFO     Terraform parameters are generated
+2026-01-28 10:14:55+0100 INFO     Running Terraform init for workspace 31b09c15-8a87-4a0c-93ef-ad92eba15b6d
+2026-01-28 10:14:58+0100 INFO     Running Terraform apply for workspace 31b09c15-8a87-4a0c-93ef-ad92eba15b6d
+2026-01-28 10:14:59+0100 INFO     data.openstack_images_image_v2.base_image: Reading...
+2026-01-28 10:15:00+0100 INFO     data.openstack_images_image_v2.base_image: Read complete after 0s [id=8296b53a-8d7f-45ef-ae97-59ef57db33d4]
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO     Terraform used the selected providers to generate the following execution
+2026-01-28 10:15:00+0100 INFO     plan. Resource actions are indicated with the following symbols:
+2026-01-28 10:15:00+0100 INFO       + create
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO     Terraform will perform the following actions:
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # null_resource.sh will be created
+2026-01-28 10:15:00+0100 INFO       + resource "null_resource" "sh" {
+2026-01-28 10:15:00+0100 INFO           + id       = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + triggers = {
+2026-01-28 10:15:00+0100 INFO               + "apikey_id"     = (sensitive value)
+2026-01-28 10:15:00+0100 INFO               + "apikey_secret" = (sensitive value)
+2026-01-28 10:15:00+0100 INFO               + "auth_url"      = (sensitive value)
+2026-01-28 10:15:00+0100 INFO               + "instance_id"   = (known after apply)
+2026-01-28 10:15:00+0100 INFO               + "nova_url"      = (sensitive value)
+2026-01-28 10:15:00+0100 INFO               + "volume_id"     = ""
+2026-01-28 10:15:00+0100 INFO             }
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # openstack_blockstorage_volume_v3.boot-volume will be created
+2026-01-28 10:15:00+0100 INFO       + resource "openstack_blockstorage_volume_v3" "boot-volume" {
+2026-01-28 10:15:00+0100 INFO           + attachment        = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + availability_zone = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + id                = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + image_id          = "8296b53a-8d7f-45ef-ae97-59ef57db33d4"
+2026-01-28 10:15:00+0100 INFO           + metadata          = {
+2026-01-28 10:15:00+0100 INFO               + "application_type"   = "Compute"
+2026-01-28 10:15:00+0100 INFO               + "cloud_type"         = "OpenStack"
+2026-01-28 10:15:00+0100 INFO               + "resource_type"      = "VM"
+2026-01-28 10:15:00+0100 INFO               + "subscription"       = "rsc-live_f21ee29a-6301-4d68-b22c-0d2ec3bde491"
+2026-01-28 10:15:00+0100 INFO               + "subscription_group" = "e6ea9ca7-e833-4150-8dfd-1dcd6c49f75c"
+2026-01-28 10:15:00+0100 INFO               + "volume_type"        = "apollo_nvme"
+2026-01-28 10:15:00+0100 INFO               + "workspace_id"       = "31b09c15-8a87-4a0c-93ef-ad92eba15b6d"
+2026-01-28 10:15:00+0100 INFO             }
+2026-01-28 10:15:00+0100 INFO           + name              = "31b09c15-8a87-4a0c-93ef-ad92eba15b6d-boot-volume"
+2026-01-28 10:15:00+0100 INFO           + region            = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + size              = 150
+2026-01-28 10:15:00+0100 INFO           + volume_type       = "apollo_nvme"
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # openstack_compute_instance_v2.vm-openstack will be created
+2026-01-28 10:15:00+0100 INFO       + resource "openstack_compute_instance_v2" "vm-openstack" {
+2026-01-28 10:15:00+0100 INFO           + access_ip_v4        = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + access_ip_v6        = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + all_metadata        = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + all_tags            = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + availability_zone   = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + created             = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + flavor_id           = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + flavor_name         = "hpc-4core-32gb-20gb"
+2026-01-28 10:15:00+0100 INFO           + force_delete        = false
+2026-01-28 10:15:00+0100 INFO           + id                  = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + image_id            = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + image_name          = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + key_pair            = "31b09c15-8a87-4a0c-93ef-ad92eba15b6d-public-key"
+2026-01-28 10:15:00+0100 INFO           + metadata            = {
+2026-01-28 10:15:00+0100 INFO               + "application_type"   = "Compute"
+2026-01-28 10:15:00+0100 INFO               + "cloud_type"         = "OpenStack"
+2026-01-28 10:15:00+0100 INFO               + "resource_type"      = "VM"
+2026-01-28 10:15:00+0100 INFO               + "subscription"       = "rsc-live_f21ee29a-6301-4d68-b22c-0d2ec3bde491"
+2026-01-28 10:15:00+0100 INFO               + "subscription_group" = "e6ea9ca7-e833-4150-8dfd-1dcd6c49f75c"
+2026-01-28 10:15:00+0100 INFO               + "workspace_id"       = "31b09c15-8a87-4a0c-93ef-ad92eba15b6d"
+2026-01-28 10:15:00+0100 INFO             }
+2026-01-28 10:15:00+0100 INFO           + name                = "bambamlabelstud.bambam-hu.src.surf-hosted.nl"
+2026-01-28 10:15:00+0100 INFO           + power_state         = "active"
+2026-01-28 10:15:00+0100 INFO           + region              = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + security_groups     = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + stop_before_destroy = true
+2026-01-28 10:15:00+0100 INFO           + tags                = [
+2026-01-28 10:15:00+0100 INFO               + "31b09c15-8a87-4a0c-93ef-ad92eba15b6d",
+2026-01-28 10:15:00+0100 INFO               + "rsc-instance",
+2026-01-28 10:15:00+0100 INFO               + "rsc-live_f21ee29a-6301-4d68-b22c-0d2ec3bde491",
+2026-01-28 10:15:00+0100 INFO             ]
+2026-01-28 10:15:00+0100 INFO           + updated             = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + user_data           = "288019fdca10d1ddc4769b5dfe7f00ca26cafd2a"
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO           + block_device {
+2026-01-28 10:15:00+0100 INFO               + boot_index            = 0
+2026-01-28 10:15:00+0100 INFO               + delete_on_termination = true
+2026-01-28 10:15:00+0100 INFO               + destination_type      = "volume"
+2026-01-28 10:15:00+0100 INFO               + multiattach           = false
+2026-01-28 10:15:00+0100 INFO               + source_type           = "volume"
+2026-01-28 10:15:00+0100 INFO               + uuid                  = (known after apply)
+2026-01-28 10:15:00+0100 INFO             }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO           + network {
+2026-01-28 10:15:00+0100 INFO               + access_network = false
+2026-01-28 10:15:00+0100 INFO               + fixed_ip_v4    = (known after apply)
+2026-01-28 10:15:00+0100 INFO               + fixed_ip_v6    = (known after apply)
+2026-01-28 10:15:00+0100 INFO               + mac            = (known after apply)
+2026-01-28 10:15:00+0100 INFO               + name           = (known after apply)
+2026-01-28 10:15:00+0100 INFO               + port           = (known after apply)
+2026-01-28 10:15:00+0100 INFO               + uuid           = (known after apply)
+2026-01-28 10:15:00+0100 INFO             }
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # openstack_compute_keypair_v2.public_key will be created
+2026-01-28 10:15:00+0100 INFO       + resource "openstack_compute_keypair_v2" "public_key" {
+2026-01-28 10:15:00+0100 INFO           + fingerprint = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + id          = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + name        = "31b09c15-8a87-4a0c-93ef-ad92eba15b6d-public-key"
+2026-01-28 10:15:00+0100 INFO           + private_key = (sensitive value)
+2026-01-28 10:15:00+0100 INFO           + public_key  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDaHRL9UNdwi03Hs+SPZ1vIKNs/hG6HSK1jIn9iSo6oq8sQHbsUFVcavGgodoEXcwFn5kY3YZOL7cWX0+sAYwgJrPEACY3pMz3l3vz5u8fEoWiN1pdYO27JDjTyJ61aaoZgwQI4tXF3mZA/S7d3XLRvIANgPQ8nxMXpgOFrvsp+5gmFUSnKrvapk3/55KPpcUPlDAHAYpMNJuZ9jNVoQgx7Bd65d9yIoSnyM1WHGKo7XlRy5D0bq8HxA1qEz+q2cjpGksdgkYvGen63Zw/tid4MndHYLSMFJwgMPvapjlQERDvRXFDv+DWfofiKnN/cr5lZBGdUItxEV3bhTO0K6MQl34UihwHsHVF+jCbgJEaf7L7Xsp6NoCWMqLQH0lxDcKjOAv5g8QEhzKTEKJz6DwadU257oXnlNSCFlR351yEgrlB2rRrIDlkRUHK8s5wCDWJ2fh1MVQml73i2oJ+CWwYd7tu6qQW76dfNRQGfJVki3Qb1NE/xwlLmmo9OREeuKBpIkcoeanoMSw0krg4twKgCoXQKGwurFfHuho8yBJzNsAtQqNZhthpWkNdpnufCrxHCVYK4UtQp0FIl50pXUmtl1au8GkXZeLvga7WH66b48QNjXcFaYru8WYQzJwyxXGlQCf1BfdAh6tjjKuqz92PyTB9iJpp4qz+PEJQs2ppSUQ=="
+2026-01-28 10:15:00+0100 INFO           + region      = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + user_id     = (known after apply)
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # openstack_networking_floatingip_associate_v2.floatip[0] will be created
+2026-01-28 10:15:00+0100 INFO       + resource "openstack_networking_floatingip_associate_v2" "floatip" {
+2026-01-28 10:15:00+0100 INFO           + fixed_ip    = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + floating_ip = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + id          = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + port_id     = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + region      = (known after apply)
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # openstack_networking_floatingip_v2.floatip[0] will be created
+2026-01-28 10:15:00+0100 INFO       + resource "openstack_networking_floatingip_v2" "floatip" {
+2026-01-28 10:15:00+0100 INFO           + address    = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + all_tags   = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + dns_domain = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + dns_name   = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + fixed_ip   = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + id         = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + pool       = "provider_vlan_152"
+2026-01-28 10:15:00+0100 INFO           + port_id    = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + region     = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + subnet_id  = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + tags       = [
+2026-01-28 10:15:00+0100 INFO               + "31b09c15-8a87-4a0c-93ef-ad92eba15b6d",
+2026-01-28 10:15:00+0100 INFO               + "Compute",
+2026-01-28 10:15:00+0100 INFO               + "OpenStack",
+2026-01-28 10:15:00+0100 INFO               + "VM",
+2026-01-28 10:15:00+0100 INFO               + "e6ea9ca7-e833-4150-8dfd-1dcd6c49f75c",
+2026-01-28 10:15:00+0100 INFO               + "rsc-live_f21ee29a-6301-4d68-b22c-0d2ec3bde491",
+2026-01-28 10:15:00+0100 INFO             ]
+2026-01-28 10:15:00+0100 INFO           + tenant_id  = (known after apply)
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # openstack_networking_network_v2.network[0] will be created
+2026-01-28 10:15:00+0100 INFO       + resource "openstack_networking_network_v2" "network" {
+2026-01-28 10:15:00+0100 INFO           + admin_state_up          = true
+2026-01-28 10:15:00+0100 INFO           + all_tags                = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + availability_zone_hints = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + dns_domain              = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + external                = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + id                      = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + mtu                     = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + name                    = "31b09c15-8a87-4a0c-93ef-ad92eba15b6d-network"
+2026-01-28 10:15:00+0100 INFO           + port_security_enabled   = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + qos_policy_id           = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + region                  = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + shared                  = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + tags                    = [
+2026-01-28 10:15:00+0100 INFO               + "31b09c15-8a87-4a0c-93ef-ad92eba15b6d-network",
+2026-01-28 10:15:00+0100 INFO               + "Compute",
+2026-01-28 10:15:00+0100 INFO               + "OpenStack",
+2026-01-28 10:15:00+0100 INFO               + "VM",
+2026-01-28 10:15:00+0100 INFO               + "e6ea9ca7-e833-4150-8dfd-1dcd6c49f75c",
+2026-01-28 10:15:00+0100 INFO               + "rsc-live_f21ee29a-6301-4d68-b22c-0d2ec3bde491",
+2026-01-28 10:15:00+0100 INFO             ]
+2026-01-28 10:15:00+0100 INFO           + tenant_id               = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + transparent_vlan        = (known after apply)
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # openstack_networking_port_v2.instance_network_port will be created
+2026-01-28 10:15:00+0100 INFO       + resource "openstack_networking_port_v2" "instance_network_port" {
+2026-01-28 10:15:00+0100 INFO           + admin_state_up         = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + all_fixed_ips          = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + all_security_group_ids = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + all_tags               = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + device_id              = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + device_owner           = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + dns_assignment         = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + dns_name               = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + id                     = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + mac_address            = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + network_id             = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + port_security_enabled  = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + qos_policy_id          = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + region                 = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + security_group_ids     = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + tenant_id              = (known after apply)
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO           + fixed_ip {
+2026-01-28 10:15:00+0100 INFO               + subnet_id = (known after apply)
+2026-01-28 10:15:00+0100 INFO             }
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # openstack_networking_router_interface_v2.router_interface[0] will be created
+2026-01-28 10:15:00+0100 INFO       + resource "openstack_networking_router_interface_v2" "router_interface" {
+2026-01-28 10:15:00+0100 INFO           + force_destroy = false
+2026-01-28 10:15:00+0100 INFO           + id            = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + port_id       = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + region        = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + router_id     = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + subnet_id     = (known after apply)
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # openstack_networking_router_v2.router[0] will be created
+2026-01-28 10:15:00+0100 INFO       + resource "openstack_networking_router_v2" "router" {
+2026-01-28 10:15:00+0100 INFO           + admin_state_up          = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + all_tags                = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + availability_zone_hints = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + distributed             = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + enable_snat             = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + external_network_id     = "5262af08-8edb-423b-996a-6d5d246ee883"
+2026-01-28 10:15:00+0100 INFO           + id                      = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + name                    = "31b09c15-8a87-4a0c-93ef-ad92eba15b6d-router"
+2026-01-28 10:15:00+0100 INFO           + region                  = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + tags                    = [
+2026-01-28 10:15:00+0100 INFO               + "31b09c15-8a87-4a0c-93ef-ad92eba15b6d-router",
+2026-01-28 10:15:00+0100 INFO               + "Compute",
+2026-01-28 10:15:00+0100 INFO               + "OpenStack",
+2026-01-28 10:15:00+0100 INFO               + "VM",
+2026-01-28 10:15:00+0100 INFO               + "e6ea9ca7-e833-4150-8dfd-1dcd6c49f75c",
+2026-01-28 10:15:00+0100 INFO               + "rsc-live_f21ee29a-6301-4d68-b22c-0d2ec3bde491",
+2026-01-28 10:15:00+0100 INFO             ]
+2026-01-28 10:15:00+0100 INFO           + tenant_id               = (known after apply)
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # openstack_networking_secgroup_rule_v2.secgroup_rule[0] will be created
+2026-01-28 10:15:00+0100 INFO       + resource "openstack_networking_secgroup_rule_v2" "secgroup_rule" {
+2026-01-28 10:15:00+0100 INFO           + direction         = "egress"
+2026-01-28 10:15:00+0100 INFO           + ethertype         = "IPv4"
+2026-01-28 10:15:00+0100 INFO           + id                = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + port_range_max    = 65535
+2026-01-28 10:15:00+0100 INFO           + port_range_min    = 1
+2026-01-28 10:15:00+0100 INFO           + protocol          = "tcp"
+2026-01-28 10:15:00+0100 INFO           + region            = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + remote_group_id   = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + remote_ip_prefix  = "0.0.0.0/0"
+2026-01-28 10:15:00+0100 INFO           + security_group_id = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + tenant_id         = (known after apply)
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # openstack_networking_secgroup_rule_v2.secgroup_rule[1] will be created
+2026-01-28 10:15:00+0100 INFO       + resource "openstack_networking_secgroup_rule_v2" "secgroup_rule" {
+2026-01-28 10:15:00+0100 INFO           + direction         = "ingress"
+2026-01-28 10:15:00+0100 INFO           + ethertype         = "IPv4"
+2026-01-28 10:15:00+0100 INFO           + id                = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + port_range_max    = 80
+2026-01-28 10:15:00+0100 INFO           + port_range_min    = 80
+2026-01-28 10:15:00+0100 INFO           + protocol          = "tcp"
+2026-01-28 10:15:00+0100 INFO           + region            = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + remote_group_id   = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + remote_ip_prefix  = "0.0.0.0/0"
+2026-01-28 10:15:00+0100 INFO           + security_group_id = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + tenant_id         = (known after apply)
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # openstack_networking_secgroup_rule_v2.secgroup_rule[2] will be created
+2026-01-28 10:15:00+0100 INFO       + resource "openstack_networking_secgroup_rule_v2" "secgroup_rule" {
+2026-01-28 10:15:00+0100 INFO           + direction         = "ingress"
+2026-01-28 10:15:00+0100 INFO           + ethertype         = "IPv4"
+2026-01-28 10:15:00+0100 INFO           + id                = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + port_range_max    = 22
+2026-01-28 10:15:00+0100 INFO           + port_range_min    = 22
+2026-01-28 10:15:00+0100 INFO           + protocol          = "tcp"
+2026-01-28 10:15:00+0100 INFO           + region            = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + remote_group_id   = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + remote_ip_prefix  = "63.32.198.54/32"
+2026-01-28 10:15:00+0100 INFO           + security_group_id = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + tenant_id         = (known after apply)
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # openstack_networking_secgroup_rule_v2.secgroup_rule[3] will be created
+2026-01-28 10:15:00+0100 INFO       + resource "openstack_networking_secgroup_rule_v2" "secgroup_rule" {
+2026-01-28 10:15:00+0100 INFO           + direction         = "ingress"
+2026-01-28 10:15:00+0100 INFO           + ethertype         = "IPv4"
+2026-01-28 10:15:00+0100 INFO           + id                = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + port_range_max    = 22
+2026-01-28 10:15:00+0100 INFO           + port_range_min    = 22
+2026-01-28 10:15:00+0100 INFO           + protocol          = "tcp"
+2026-01-28 10:15:00+0100 INFO           + region            = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + remote_group_id   = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + remote_ip_prefix  = "54.195.95.136/32"
+2026-01-28 10:15:00+0100 INFO           + security_group_id = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + tenant_id         = (known after apply)
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # openstack_networking_secgroup_rule_v2.secgroup_rule[4] will be created
+2026-01-28 10:15:00+0100 INFO       + resource "openstack_networking_secgroup_rule_v2" "secgroup_rule" {
+2026-01-28 10:15:00+0100 INFO           + direction         = "ingress"
+2026-01-28 10:15:00+0100 INFO           + ethertype         = "IPv4"
+2026-01-28 10:15:00+0100 INFO           + id                = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + port_range_max    = 22
+2026-01-28 10:15:00+0100 INFO           + port_range_min    = 22
+2026-01-28 10:15:00+0100 INFO           + protocol          = "tcp"
+2026-01-28 10:15:00+0100 INFO           + region            = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + remote_group_id   = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + remote_ip_prefix  = "54.73.214.43/32"
+2026-01-28 10:15:00+0100 INFO           + security_group_id = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + tenant_id         = (known after apply)
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # openstack_networking_secgroup_rule_v2.secgroup_rule[5] will be created
+2026-01-28 10:15:00+0100 INFO       + resource "openstack_networking_secgroup_rule_v2" "secgroup_rule" {
+2026-01-28 10:15:00+0100 INFO           + direction         = "ingress"
+2026-01-28 10:15:00+0100 INFO           + ethertype         = "IPv4"
+2026-01-28 10:15:00+0100 INFO           + id                = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + port_range_max    = 65535
+2026-01-28 10:15:00+0100 INFO           + port_range_min    = 1
+2026-01-28 10:15:00+0100 INFO           + protocol          = "udp"
+2026-01-28 10:15:00+0100 INFO           + region            = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + remote_group_id   = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + remote_ip_prefix  = "10.10.10.0/24"
+2026-01-28 10:15:00+0100 INFO           + security_group_id = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + tenant_id         = (known after apply)
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # openstack_networking_secgroup_rule_v2.secgroup_rule[6] will be created
+2026-01-28 10:15:00+0100 INFO       + resource "openstack_networking_secgroup_rule_v2" "secgroup_rule" {
+2026-01-28 10:15:00+0100 INFO           + direction         = "ingress"
+2026-01-28 10:15:00+0100 INFO           + ethertype         = "IPv4"
+2026-01-28 10:15:00+0100 INFO           + id                = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + port_range_max    = 65535
+2026-01-28 10:15:00+0100 INFO           + port_range_min    = 1
+2026-01-28 10:15:00+0100 INFO           + protocol          = "tcp"
+2026-01-28 10:15:00+0100 INFO           + region            = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + remote_group_id   = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + remote_ip_prefix  = "10.10.10.0/24"
+2026-01-28 10:15:00+0100 INFO           + security_group_id = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + tenant_id         = (known after apply)
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # openstack_networking_secgroup_rule_v2.secgroup_rule[7] will be created
+2026-01-28 10:15:00+0100 INFO       + resource "openstack_networking_secgroup_rule_v2" "secgroup_rule" {
+2026-01-28 10:15:00+0100 INFO           + direction         = "egress"
+2026-01-28 10:15:00+0100 INFO           + ethertype         = "IPv4"
+2026-01-28 10:15:00+0100 INFO           + id                = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + port_range_max    = 65535
+2026-01-28 10:15:00+0100 INFO           + port_range_min    = 1
+2026-01-28 10:15:00+0100 INFO           + protocol          = "udp"
+2026-01-28 10:15:00+0100 INFO           + region            = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + remote_group_id   = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + remote_ip_prefix  = "10.10.10.0/24"
+2026-01-28 10:15:00+0100 INFO           + security_group_id = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + tenant_id         = (known after apply)
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # openstack_networking_secgroup_rule_v2.secgroup_rule[8] will be created
+2026-01-28 10:15:00+0100 INFO       + resource "openstack_networking_secgroup_rule_v2" "secgroup_rule" {
+2026-01-28 10:15:00+0100 INFO           + direction         = "egress"
+2026-01-28 10:15:00+0100 INFO           + ethertype         = "IPv4"
+2026-01-28 10:15:00+0100 INFO           + id                = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + port_range_max    = 65535
+2026-01-28 10:15:00+0100 INFO           + port_range_min    = 1
+2026-01-28 10:15:00+0100 INFO           + protocol          = "tcp"
+2026-01-28 10:15:00+0100 INFO           + region            = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + remote_group_id   = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + remote_ip_prefix  = "10.10.10.0/24"
+2026-01-28 10:15:00+0100 INFO           + security_group_id = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + tenant_id         = (known after apply)
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # openstack_networking_secgroup_v2.secgroup will be created
+2026-01-28 10:15:00+0100 INFO       + resource "openstack_networking_secgroup_v2" "secgroup" {
+2026-01-28 10:15:00+0100 INFO           + all_tags    = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + description = "31b09c15-8a87-4a0c-93ef-ad92eba15b6d-secgroup"
+2026-01-28 10:15:00+0100 INFO           + id          = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + name        = "31b09c15-8a87-4a0c-93ef-ad92eba15b6d-secgroup"
+2026-01-28 10:15:00+0100 INFO           + region      = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + tags        = [
+2026-01-28 10:15:00+0100 INFO               + "31b09c15-8a87-4a0c-93ef-ad92eba15b6d-secgroup",
+2026-01-28 10:15:00+0100 INFO               + "Compute",
+2026-01-28 10:15:00+0100 INFO               + "OpenStack",
+2026-01-28 10:15:00+0100 INFO               + "VM",
+2026-01-28 10:15:00+0100 INFO               + "e6ea9ca7-e833-4150-8dfd-1dcd6c49f75c",
+2026-01-28 10:15:00+0100 INFO               + "rsc-live_f21ee29a-6301-4d68-b22c-0d2ec3bde491",
+2026-01-28 10:15:00+0100 INFO             ]
+2026-01-28 10:15:00+0100 INFO           + tenant_id   = (known after apply)
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO       # openstack_networking_subnet_v2.subnet[0] will be created
+2026-01-28 10:15:00+0100 INFO       + resource "openstack_networking_subnet_v2" "subnet" {
+2026-01-28 10:15:00+0100 INFO           + all_tags          = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + cidr              = "192.168.0.0/16"
+2026-01-28 10:15:00+0100 INFO           + dns_nameservers   = [
+2026-01-28 10:15:00+0100 INFO               + "145.100.11.133",
+2026-01-28 10:15:00+0100 INFO               + "145.100.11.134",
+2026-01-28 10:15:00+0100 INFO             ]
+2026-01-28 10:15:00+0100 INFO           + enable_dhcp       = true
+2026-01-28 10:15:00+0100 INFO           + gateway_ip        = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + id                = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + ip_version        = 4
+2026-01-28 10:15:00+0100 INFO           + ipv6_address_mode = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + ipv6_ra_mode      = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + name              = "31b09c15-8a87-4a0c-93ef-ad92eba15b6d-subnet"
+2026-01-28 10:15:00+0100 INFO           + network_id        = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + no_gateway        = false
+2026-01-28 10:15:00+0100 INFO           + region            = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + service_types     = (known after apply)
+2026-01-28 10:15:00+0100 INFO           + tags              = [
+2026-01-28 10:15:00+0100 INFO               + "31b09c15-8a87-4a0c-93ef-ad92eba15b6d-subnet",
+2026-01-28 10:15:00+0100 INFO               + "Compute",
+2026-01-28 10:15:00+0100 INFO               + "OpenStack",
+2026-01-28 10:15:00+0100 INFO               + "VM",
+2026-01-28 10:15:00+0100 INFO               + "e6ea9ca7-e833-4150-8dfd-1dcd6c49f75c",
+2026-01-28 10:15:00+0100 INFO               + "rsc-live_f21ee29a-6301-4d68-b22c-0d2ec3bde491",
+2026-01-28 10:15:00+0100 INFO             ]
+2026-01-28 10:15:00+0100 INFO           + tenant_id         = (known after apply)
+2026-01-28 10:15:00+0100 INFO         }
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO     Plan: 21 to add, 0 to change, 0 to destroy.
+2026-01-28 10:15:00+0100 INFO     
+2026-01-28 10:15:00+0100 INFO     Changes to Outputs:
+2026-01-28 10:15:00+0100 INFO       + application_type         = "Compute"
+2026-01-28 10:15:00+0100 INFO       + boot_volume_size         = 150
+2026-01-28 10:15:00+0100 INFO       + boot_volume_type         = "apollo_nvme"
+2026-01-28 10:15:00+0100 INFO       + cloud_type               = "OpenStack"
+2026-01-28 10:15:00+0100 INFO       + flavor_name              = "hpc-4core-32gb-20gb"
+2026-01-28 10:15:00+0100 INFO       + id                       = (known after apply)
+2026-01-28 10:15:00+0100 INFO       + image_id                 = "8296b53a-8d7f-45ef-ae97-59ef57db33d4"
+2026-01-28 10:15:00+0100 INFO       + image_name               = "ubuntu-22.04-rsc"
+2026-01-28 10:15:00+0100 INFO       + instance_user            = "ubuntu"
+2026-01-28 10:15:00+0100 INFO       + ip                       = (known after apply)
+2026-01-28 10:15:00+0100 INFO       + min_os_disk_size         = 20
+2026-01-28 10:15:00+0100 INFO       + network_secgroup_id      = (known after apply)
+2026-01-28 10:15:00+0100 INFO       + resource_type            = "VM"
+2026-01-28 10:15:00+0100 INFO       + secgroup_id              = (known after apply)
+2026-01-28 10:15:00+0100 INFO       + subscription             = "rsc-live_f21ee29a-6301-4d68-b22c-0d2ec3bde491"
+2026-01-28 10:15:00+0100 INFO       + subscription_group       = "e6ea9ca7-e833-4150-8dfd-1dcd6c49f75c"
+2026-01-28 10:15:00+0100 INFO       + terraform_script_version = 3.2
+2026-01-28 10:15:00+0100 INFO       + vm_id                    = (known after apply)
+2026-01-28 10:15:00+0100 INFO       + workspace_fqdn           = "bambamlabelstud.bambam-hu.src.surf-hosted.nl"
+2026-01-28 10:15:00+0100 INFO       + workspace_id             = "31b09c15-8a87-4a0c-93ef-ad92eba15b6d"
+2026-01-28 10:15:00+0100 INFO     openstack_blockstorage_volume_v3.boot-volume: Creating...
+2026-01-28 10:15:00+0100 INFO     openstack_compute_keypair_v2.public_key: Creating...
+2026-01-28 10:15:00+0100 INFO     openstack_networking_network_v2.network[0]: Creating...
+2026-01-28 10:15:00+0100 INFO     openstack_networking_router_v2.router[0]: Creating...
+2026-01-28 10:15:00+0100 INFO     openstack_networking_secgroup_v2.secgroup: Creating...
+2026-01-28 10:15:00+0100 INFO     openstack_networking_floatingip_v2.floatip[0]: Creating...
+2026-01-28 10:15:01+0100 INFO     openstack_compute_keypair_v2.public_key: Creation complete after 1s [id=31b09c15-8a87-4a0c-93ef-ad92eba15b6d-public-key]
+2026-01-28 10:15:01+0100 INFO     openstack_networking_secgroup_v2.secgroup: Creation complete after 1s [id=23159fc9-a9f8-4360-98e9-9fea9bdf441a]
+2026-01-28 10:15:01+0100 INFO     openstack_networking_secgroup_rule_v2.secgroup_rule[2]: Creating...
+2026-01-28 10:15:01+0100 INFO     openstack_networking_secgroup_rule_v2.secgroup_rule[0]: Creating...
+2026-01-28 10:15:01+0100 INFO     openstack_networking_secgroup_rule_v2.secgroup_rule[5]: Creating...
+2026-01-28 10:15:01+0100 INFO     openstack_networking_secgroup_rule_v2.secgroup_rule[4]: Creating...
+2026-01-28 10:15:01+0100 INFO     openstack_networking_secgroup_rule_v2.secgroup_rule[3]: Creating...
+2026-01-28 10:15:02+0100 INFO     openstack_networking_secgroup_rule_v2.secgroup_rule[7]: Creating...
+2026-01-28 10:15:02+0100 INFO     openstack_networking_secgroup_rule_v2.secgroup_rule[2]: Creation complete after 0s [id=2cea0e6f-72e1-435e-8987-2cfe3a4984ee]
+2026-01-28 10:15:02+0100 INFO     openstack_networking_secgroup_rule_v2.secgroup_rule[6]: Creating...
+2026-01-28 10:15:02+0100 INFO     openstack_networking_secgroup_rule_v2.secgroup_rule[0]: Creation complete after 0s [id=421df9df-9659-4e35-b48c-c61bd5067518]
+2026-01-28 10:15:02+0100 INFO     openstack_networking_secgroup_rule_v2.secgroup_rule[1]: Creating...
+2026-01-28 10:15:02+0100 INFO     openstack_networking_secgroup_rule_v2.secgroup_rule[5]: Creation complete after 1s [id=c3e0a347-442b-4f76-adad-0e128bb3d3c2]
+2026-01-28 10:15:02+0100 INFO     openstack_networking_secgroup_rule_v2.secgroup_rule[8]: Creating...
+2026-01-28 10:15:02+0100 INFO     openstack_networking_secgroup_rule_v2.secgroup_rule[7]: Creation complete after 1s [id=afbbc282-5d4a-4edc-afef-2d3c477bb312]
+2026-01-28 10:15:02+0100 INFO     openstack_networking_secgroup_rule_v2.secgroup_rule[4]: Creation complete after 1s [id=3cf953a9-a986-44cf-bb40-68f95046a5c5]
+2026-01-28 10:15:02+0100 INFO     openstack_networking_secgroup_rule_v2.secgroup_rule[3]: Creation complete after 1s [id=350fdb74-9a1a-425b-8f12-c8b45ecca4ea]
+2026-01-28 10:15:03+0100 INFO     openstack_networking_secgroup_rule_v2.secgroup_rule[6]: Creation complete after 1s [id=3a06376e-22d0-46df-b470-a3db8ab47235]
+2026-01-28 10:15:03+0100 INFO     openstack_networking_secgroup_rule_v2.secgroup_rule[1]: Creation complete after 1s [id=0f03b5a0-bfc2-4b5a-9f61-d6410fc2af20]
+2026-01-28 10:15:03+0100 INFO     openstack_networking_secgroup_rule_v2.secgroup_rule[8]: Creation complete after 0s [id=ea72cf43-9d15-45f6-898c-998d9b82f83a]
+2026-01-28 10:15:07+0100 INFO     openstack_networking_network_v2.network[0]: Creation complete after 6s [id=b0a7df60-dde6-4b77-a912-1737f9651db2]
+2026-01-28 10:15:07+0100 INFO     openstack_networking_subnet_v2.subnet[0]: Creating...
+2026-01-28 10:15:08+0100 INFO     openstack_networking_floatingip_v2.floatip[0]: Creation complete after 7s [id=1d33c849-4fac-4308-834f-d1ede83f987f]
+2026-01-28 10:15:09+0100 INFO     openstack_networking_router_v2.router[0]: Creation complete after 9s [id=57861eab-d01d-4bd6-93b3-58a939e0298b]
+2026-01-28 10:15:10+0100 INFO     openstack_blockstorage_volume_v3.boot-volume: Still creating... [10s elapsed]
+2026-01-28 10:15:12+0100 INFO     openstack_blockstorage_volume_v3.boot-volume: Creation complete after 11s [id=d93521d1-d017-44b7-8319-f40c3d3113da]
+2026-01-28 10:15:12+0100 INFO     openstack_networking_subnet_v2.subnet[0]: Creation complete after 5s [id=078f6282-b9d2-42a6-a277-3d911037991d]
+2026-01-28 10:15:12+0100 INFO     openstack_networking_router_interface_v2.router_interface[0]: Creating...
+2026-01-28 10:15:12+0100 INFO     openstack_networking_port_v2.instance_network_port: Creating...
+2026-01-28 10:15:18+0100 INFO     openstack_networking_port_v2.instance_network_port: Creation complete after 6s [id=2e6cb13a-d6e5-48c8-909d-2449f3396794]
+2026-01-28 10:15:18+0100 INFO     openstack_networking_floatingip_associate_v2.floatip[0]: Creating...
+2026-01-28 10:15:18+0100 INFO     openstack_compute_instance_v2.vm-openstack: Creating...
+2026-01-28 10:15:19+0100 INFO     openstack_networking_floatingip_associate_v2.floatip[0]: Creation complete after 1s [id=1d33c849-4fac-4308-834f-d1ede83f987f]
+2026-01-28 10:15:20+0100 INFO     openstack_networking_router_interface_v2.router_interface[0]: Creation complete after 8s [id=f86764e5-c407-41e1-b827-97b29aba6a3f]
+2026-01-28 10:15:28+0100 INFO     openstack_compute_instance_v2.vm-openstack: Still creating... [10s elapsed]
+2026-01-28 10:15:30+0100 INFO     openstack_compute_instance_v2.vm-openstack: Creation complete after 13s [id=b766c4d6-3639-4fdd-aa3c-5fdab41b0f92]
+2026-01-28 10:15:30+0100 INFO     null_resource.sh: Creating...
+2026-01-28 10:15:30+0100 INFO     null_resource.sh: Creation complete after 0s [id=3067351505128694116]
+2026-01-28 10:15:30+0100 INFO     
+2026-01-28 10:15:30+0100 INFO     Apply complete! Resources: 21 added, 0 changed, 0 destroyed.
+2026-01-28 10:15:30+0100 INFO     
+2026-01-28 10:15:30+0100 INFO     Outputs:
+2026-01-28 10:15:30+0100 INFO     
+2026-01-28 10:15:30+0100 INFO     application_type = "Compute"
+2026-01-28 10:15:30+0100 INFO     boot_volume_size = 150
+2026-01-28 10:15:30+0100 INFO     boot_volume_type = "apollo_nvme"
+2026-01-28 10:15:30+0100 INFO     cloud_type = "OpenStack"
+2026-01-28 10:15:30+0100 INFO     flavor_name = "hpc-4core-32gb-20gb"
+2026-01-28 10:15:30+0100 INFO     id = "b766c4d6-3639-4fdd-aa3c-5fdab41b0f92"
+2026-01-28 10:15:30+0100 INFO     image_id = "8296b53a-8d7f-45ef-ae97-59ef57db33d4"
+2026-01-28 10:15:30+0100 INFO     image_name = "ubuntu-22.04-rsc"
+2026-01-28 10:15:30+0100 INFO     instance_user = "ubuntu"
+2026-01-28 10:15:30+0100 INFO     ip = "145.38.186.201"
+2026-01-28 10:15:30+0100 INFO     min_os_disk_size = 20
+2026-01-28 10:15:30+0100 INFO     network_secgroup_id = "23159fc9-a9f8-4360-98e9-9fea9bdf441a"
+2026-01-28 10:15:30+0100 INFO     resource_type = "VM"
+2026-01-28 10:15:30+0100 INFO     secgroup_id = "23159fc9-a9f8-4360-98e9-9fea9bdf441a"
+2026-01-28 10:15:30+0100 INFO     subscription = "rsc-live_f21ee29a-6301-4d68-b22c-0d2ec3bde491"
+2026-01-28 10:15:30+0100 INFO     subscription_group = "e6ea9ca7-e833-4150-8dfd-1dcd6c49f75c"
+2026-01-28 10:15:30+0100 INFO     terraform_script_version = 3.2
+2026-01-28 10:15:30+0100 INFO     vm_id = "b766c4d6-3639-4fdd-aa3c-5fdab41b0f92"
+2026-01-28 10:15:30+0100 INFO     workspace_fqdn = "bambamlabelstud.bambam-hu.src.surf-hosted.nl"
+2026-01-28 10:15:30+0100 INFO     workspace_id = "31b09c15-8a87-4a0c-93ef-ad92eba15b6d"
+2026-01-28 10:15:30+0100 INFO     Running command finished with code: 0
+2026-01-28 10:15:30+0100 INFO     Terraform apply completed.
+2026-01-28 10:15:30+0100 INFO     Running Terraform output for workspace 31b09c15-8a87-4a0c-93ef-ad92eba15b6d
+2026-01-28 10:15:31+0100 INFO     Terraform output completed.
+2026-01-28 10:15:31+0100 INFO     plugins folder not found.
+2026-01-28 10:15:31+0100 INFO     Attempting to create DNS entry
+2026-01-28 10:15:54+0100 INFO     DNS entry created
+2026-01-28 10:15:54+0100 INFO     Resource is created.
+2026-01-28 10:15:54+0100 INFO     Downloading plugin SRC-OS ...
+2026-01-28 10:15:54+0100 INFO     Cloning git plugin-os.yml rsc-plugin-os-1.1.9 ...
+2026-01-28 10:15:56+0100 INFO     Cloned plugin-os.yml rsc-plugin-os-1.1.9
+2026-01-28 10:15:56+0100 INFO     Generating parameters for plugin SRC-OS ...
+2026-01-28 10:15:56+0100 INFO     disable_log [plugin SRC-OS]:False
+2026-01-28 10:15:56+0100 INFO     Running plugin SRC-OS ...
+2026-01-28 10:15:59+0100 INFO     
+2026-01-28 10:15:59+0100 INFO     PLAY [OS Plugin] ***************************************************************
+2026-01-28 10:15:59+0100 INFO     
+2026-01-28 10:15:59+0100 INFO     TASK [Wait for system to become reachable] *************************************
+2026-01-28 10:16:01+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:16:01+0100 INFO     
+2026-01-28 10:16:01+0100 INFO     TASK [Gather facts for first time] *********************************************
+2026-01-28 10:16:03+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:16:03+0100 INFO     
+2026-01-28 10:16:03+0100 INFO     TASK [Linux Setup] *************************************************************
+2026-01-28 10:16:03+0100 INFO     [WARNING]: Platform linux on host 145.38.186.201 is using the discovered Python
+2026-01-28 10:16:03+0100 INFO     interpreter at /usr/bin/python3.10, but future installation of another Python
+2026-01-28 10:16:03+0100 INFO     interpreter could change the meaning of that path. See
+2026-01-28 10:16:03+0100 INFO     https://docs.ansible.com/ansible-
+2026-01-28 10:16:03+0100 INFO     core/2.18/reference_appendices/interpreter_discovery.html for more information.
+2026-01-28 10:16:03+0100 INFO     included: /deploymentscripts/31b09c15-8a87-4a0c-93ef-ad92eba15b6d/plugins/2369d4a2-edfe-43da-b4ee-786882c4e89e/tasks/plugin-os-linux.yml for 145.38.186.201
+2026-01-28 10:16:03+0100 INFO     
+2026-01-28 10:16:03+0100 INFO     TASK [Set timezone] ************************************************************
+2026-01-28 10:16:04+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:16:04+0100 INFO     
+2026-01-28 10:16:04+0100 INFO     TASK [Check if ephemeral is mounted] *******************************************
+2026-01-28 10:16:04+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:16:04+0100 INFO     
+2026-01-28 10:16:04+0100 INFO     TASK [Install persistent scratch warning source] *******************************
+2026-01-28 10:16:04+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:04+0100 INFO     
+2026-01-28 10:16:04+0100 INFO     TASK [Create scratch README service] *******************************************
+2026-01-28 10:16:04+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:04+0100 INFO     
+2026-01-28 10:16:04+0100 INFO     TASK [Enable scratch-readme service] *******************************************
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:05+0100 INFO     
+2026-01-28 10:16:05+0100 INFO     TASK [In skel, symlink to ephemeral scratch when present] **********************
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:05+0100 INFO     
+2026-01-28 10:16:05+0100 INFO     TASK [Install epel-release] ****************************************************
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:05+0100 INFO     
+2026-01-28 10:16:05+0100 INFO     TASK [Install required packages (1)] *******************************************
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:05+0100 INFO     
+2026-01-28 10:16:05+0100 INFO     TASK [Set yubikey flag on and keep it persistent across reboots] ***************
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:05+0100 INFO     
+2026-01-28 10:16:05+0100 INFO     TASK [Update pam to enable enablemkhomedir CentOS] *****************************
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:05+0100 INFO     
+2026-01-28 10:16:05+0100 INFO     TASK [Select sssd profile on Rocky/Fedora] *************************************
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:05+0100 INFO     
+2026-01-28 10:16:05+0100 INFO     TASK [Update pam to enable enablemkhomedir Rocky/Fedora] ***********************
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:05+0100 INFO     
+2026-01-28 10:16:05+0100 INFO     TASK [Update pam to use pam_group] *********************************************
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201] => (item=/etc/pam.d/password-auth) 
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201] => (item=/etc/pam.d/system-auth) 
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:05+0100 INFO     
+2026-01-28 10:16:05+0100 INFO     TASK [Install fail2ban on CentOS or Fedora] ************************************
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:05+0100 INFO     
+2026-01-28 10:16:05+0100 INFO     TASK [Create config file fail2ban on CentOS] ***********************************
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:05+0100 INFO     
+2026-01-28 10:16:05+0100 INFO     TASK [Create config file fail2ban on Rocky] ************************************
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:05+0100 INFO     
+2026-01-28 10:16:05+0100 INFO     TASK [Create config file fail2ban on Fedora] ***********************************
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:05+0100 INFO     
+2026-01-28 10:16:05+0100 INFO     TASK [Start fail2ban on CentOS or Fedora] **************************************
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:05+0100 INFO     
+2026-01-28 10:16:05+0100 INFO     TASK [Mask systemctl power commands] *******************************************
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201] => (item=sleep.target) 
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201] => (item=suspend-then-hibernate.target) 
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201] => (item=suspend.target) 
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201] => (item=hibernate.target) 
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201] => (item=hybrid-sleep.target) 
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:05+0100 INFO     
+2026-01-28 10:16:05+0100 INFO     TASK [Add aliases to notify users] *********************************************
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:05+0100 INFO     
+2026-01-28 10:16:05+0100 INFO     TASK [Create a symbolic link pip to pip3] **************************************
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:05+0100 INFO     
+2026-01-28 10:16:05+0100 INFO     TASK [Switch off local firewall (open by default on Ubuntu)] *******************
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:05+0100 INFO     
+2026-01-28 10:16:05+0100 INFO     TASK [Start Cron service] ******************************************************
+2026-01-28 10:16:05+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:16:05+0100 INFO     
+2026-01-28 10:16:05+0100 INFO     TASK [Start apt-daily.timer using systemd] *************************************
+2026-01-28 10:16:06+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:16:06+0100 INFO     
+2026-01-28 10:16:06+0100 INFO     TASK [Start apt-daily-upgrade.timer using systemd] *****************************
+2026-01-28 10:16:07+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:16:07+0100 INFO     
+2026-01-28 10:16:07+0100 INFO     TASK [Wait for APT Lock 1] *****************************************************
+2026-01-28 10:16:07+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:16:07+0100 INFO     
+2026-01-28 10:16:07+0100 INFO     TASK [Wait for APT Lock-frontend 1] ********************************************
+2026-01-28 10:16:07+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:16:07+0100 INFO     
+2026-01-28 10:16:07+0100 INFO     TASK [Wait for /var/lib/apt/lists/lock 1] **************************************
+2026-01-28 10:16:07+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:16:07+0100 INFO     
+2026-01-28 10:16:07+0100 INFO     TASK [Wait for APT /var/cache/apt/archives/lock 1] *****************************
+2026-01-28 10:16:08+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:16:08+0100 INFO     
+2026-01-28 10:16:08+0100 INFO     TASK [Update apt repo and cache] ***********************************************
+2026-01-28 10:16:50+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:16:50+0100 INFO     
+2026-01-28 10:16:50+0100 INFO     TASK [Wait for APT Lock] *******************************************************
+2026-01-28 10:16:51+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:16:51+0100 INFO     
+2026-01-28 10:16:51+0100 INFO     TASK [Wait for APT Lock-frontend] **********************************************
+2026-01-28 10:16:51+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:16:51+0100 INFO     
+2026-01-28 10:16:51+0100 INFO     TASK [Wait for /var/lib/apt/lists/lock] ****************************************
+2026-01-28 10:16:51+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:16:51+0100 INFO     
+2026-01-28 10:16:51+0100 INFO     TASK [Wait for APT /var/cache/apt/archives/lock] *******************************
+2026-01-28 10:16:51+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:16:51+0100 INFO     
+2026-01-28 10:16:51+0100 INFO     TASK [Install required packages (3)] *******************************************
+2026-01-28 10:17:07+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:07+0100 INFO     
+2026-01-28 10:17:07+0100 INFO     TASK [Create pam entry for mkhomedir] ******************************************
+2026-01-28 10:17:09+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:09+0100 INFO     
+2026-01-28 10:17:09+0100 INFO     TASK [Update pam when pam_mkhomedir is changed] ********************************
+2026-01-28 10:17:10+0100 INFO     changed: [145.38.186.201] => (item=--remove mkhomedir)
+2026-01-28 10:17:10+0100 INFO     changed: [145.38.186.201] => (item=--package mkhomedir)
+2026-01-28 10:17:10+0100 INFO     
+2026-01-28 10:17:10+0100 INFO     TASK [Create pam entry for group membership] ***********************************
+2026-01-28 10:17:11+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:11+0100 INFO     
+2026-01-28 10:17:11+0100 INFO     TASK [Update pam when pam_group is changes] ************************************
+2026-01-28 10:17:11+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:11+0100 INFO     
+2026-01-28 10:17:11+0100 INFO     TASK [Mask systemctl power commands] *******************************************
+2026-01-28 10:17:14+0100 INFO     changed: [145.38.186.201] => (item=sleep.target)
+2026-01-28 10:17:14+0100 INFO     changed: [145.38.186.201] => (item=suspend-then-hibernate.target)
+2026-01-28 10:17:14+0100 INFO     changed: [145.38.186.201] => (item=suspend.target)
+2026-01-28 10:17:14+0100 INFO     changed: [145.38.186.201] => (item=hibernate.target)
+2026-01-28 10:17:14+0100 INFO     changed: [145.38.186.201] => (item=hybrid-sleep.target)
+2026-01-28 10:17:14+0100 INFO     
+2026-01-28 10:17:14+0100 INFO     TASK [Add aliases to notify users] *********************************************
+2026-01-28 10:17:14+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:14+0100 INFO     
+2026-01-28 10:17:14+0100 INFO     TASK [Restart cron (Debian name of service), to pick up new timezone] **********
+2026-01-28 10:17:14+0100 INFO     [WARNING]: Module remote_tmp /root/.ansible/tmp did not exist and was created
+2026-01-28 10:17:14+0100 INFO     with a mode of 0700, this may cause issues when running as another user. To
+2026-01-28 10:17:14+0100 INFO     avoid this, create the remote_tmp dir with the correct permissions manually
+2026-01-28 10:17:15+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:15+0100 INFO     
+2026-01-28 10:17:15+0100 INFO     TASK [Ensure 'wheel' group exists] *********************************************
+2026-01-28 10:17:16+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:16+0100 INFO     
+2026-01-28 10:17:16+0100 INFO     TASK [Ensure 'wheel' group has sudo] *******************************************
+2026-01-28 10:17:16+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:16+0100 INFO     
+2026-01-28 10:17:16+0100 INFO     TASK [Create data and dataset dir] *********************************************
+2026-01-28 10:17:17+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:17+0100 INFO     
+2026-01-28 10:17:17+0100 INFO     TASK [Create symlink to data dir in skel] **************************************
+2026-01-28 10:17:17+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:17+0100 INFO     
+2026-01-28 10:17:17+0100 INFO     TASK [Create /local-share directory] *******************************************
+2026-01-28 10:17:17+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:17+0100 INFO     
+2026-01-28 10:17:17+0100 INFO     TASK [In skel, symlink to local-share] *****************************************
+2026-01-28 10:17:17+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:17+0100 INFO     
+2026-01-28 10:17:17+0100 INFO     TASK [Create .ssh folder in skel] **********************************************
+2026-01-28 10:17:17+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:17+0100 INFO     
+2026-01-28 10:17:17+0100 INFO     TASK [Fix securetty] ***********************************************************
+2026-01-28 10:17:18+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:18+0100 INFO     
+2026-01-28 10:17:18+0100 INFO     TASK [Create config file fail2ban on Ubuntu] ***********************************
+2026-01-28 10:17:19+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:19+0100 INFO     
+2026-01-28 10:17:19+0100 INFO     TASK [Start fail2ban on Ubuntu] ************************************************
+2026-01-28 10:17:20+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:20+0100 INFO     
+2026-01-28 10:17:20+0100 INFO     TASK [Add /etc/hosts entry] ****************************************************
+2026-01-28 10:17:20+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:20+0100 INFO     
+2026-01-28 10:17:20+0100 INFO     TASK [Set /etc/hostname] *******************************************************
+2026-01-28 10:17:21+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:21+0100 INFO     
+2026-01-28 10:17:21+0100 INFO     TASK [Disk format mount V2] ****************************************************
+2026-01-28 10:17:21+0100 INFO     included: /deploymentscripts/31b09c15-8a87-4a0c-93ef-ad92eba15b6d/plugins/2369d4a2-edfe-43da-b4ee-786882c4e89e/tasks/plugin-disk-format-mount-v2.yml for 145.38.186.201
+2026-01-28 10:17:21+0100 INFO     
+2026-01-28 10:17:21+0100 INFO     TASK [Install gdisk on CentOS] *************************************************
+2026-01-28 10:17:21+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:17:21+0100 INFO     
+2026-01-28 10:17:21+0100 INFO     TASK [Create /etc/rsc dir] *****************************************************
+2026-01-28 10:17:21+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:21+0100 INFO     
+2026-01-28 10:17:21+0100 INFO     TASK [Create /opt/rsc-utilities dir] *******************************************
+2026-01-28 10:17:22+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:22+0100 INFO     
+2026-01-28 10:17:22+0100 INFO     TASK [Put storage config] ******************************************************
+2026-01-28 10:17:23+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:23+0100 INFO     
+2026-01-28 10:17:23+0100 INFO     TASK [Copy disk_handler_rsc.sh to /opt/rsc-utilities/] *************************
+2026-01-28 10:17:24+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:24+0100 INFO     
+2026-01-28 10:17:24+0100 INFO     TASK [Copy azure_disk_handler_rsc.sh to /opt/rsc-utilities/] *******************
+2026-01-28 10:17:24+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:17:24+0100 INFO     
+2026-01-28 10:17:24+0100 INFO     TASK [Copy aws_disk_handler_rsc.sh to /opt/rsc-utilities/] *********************
+2026-01-28 10:17:24+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:17:24+0100 INFO     
+2026-01-28 10:17:24+0100 INFO     TASK [Copy format_rsc_disk.sh to /opt/rsc-utilities/] **************************
+2026-01-28 10:17:25+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:25+0100 INFO     
+2026-01-28 10:17:25+0100 INFO     TASK [Copy automount_rsc_disk.sh to /opt/rsc-utilities/] ***********************
+2026-01-28 10:17:25+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:25+0100 INFO     
+2026-01-28 10:17:25+0100 INFO     TASK [Copy rsc-disk-handler.service to the systemd units directory] ************
+2026-01-28 10:17:26+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:26+0100 INFO     
+2026-01-28 10:17:26+0100 INFO     TASK [Trigger udevadm] *********************************************************
+2026-01-28 10:17:27+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:27+0100 INFO     
+2026-01-28 10:17:27+0100 INFO     TASK [Restart rsc-disk-handler service] ****************************************
+2026-01-28 10:17:28+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:28+0100 INFO     
+2026-01-28 10:17:28+0100 INFO     TASK [Enable rsc-disk-handler service] *****************************************
+2026-01-28 10:17:29+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:29+0100 INFO     
+2026-01-28 10:17:29+0100 INFO     TASK [Disk format mount] *******************************************************
+2026-01-28 10:17:29+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:17:29+0100 INFO     
+2026-01-28 10:17:29+0100 INFO     TASK [Add SRC IPs to hosts] ****************************************************
+2026-01-28 10:17:29+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:17:29+0100 INFO     
+2026-01-28 10:17:29+0100 INFO     PLAY RECAP *********************************************************************
+2026-01-28 10:17:29+0100 INFO     145.38.186.201             : ok=47   changed=40   unreachable=0    failed=0    skipped=26   rescued=0    ignored=0   
+2026-01-28 10:17:29+0100 INFO     Running command finished with code: 0
+2026-01-28 10:17:29+0100 INFO     Running plugin SRC-OS finished with code: 0
+2026-01-28 10:17:29+0100 INFO     Downloading plugin SRC-CO ...
+2026-01-28 10:17:29+0100 INFO     Cloning git plugin-co.yml rsc-plugin-co-1.2.19 ...
+2026-01-28 10:17:32+0100 INFO     Cloned plugin-co.yml rsc-plugin-co-1.2.19
+2026-01-28 10:17:32+0100 INFO     Generating parameters for plugin SRC-CO ...
+2026-01-28 10:17:32+0100 INFO     disable_log [plugin SRC-CO]:False
+2026-01-28 10:17:32+0100 INFO     Running plugin SRC-CO ...
+2026-01-28 10:17:35+0100 INFO     
+2026-01-28 10:17:35+0100 INFO     PLAY [Research cloud Co plugin] ************************************************
+2026-01-28 10:17:35+0100 INFO     
+2026-01-28 10:17:35+0100 INFO     TASK [Wait for system to become reachable] *************************************
+2026-01-28 10:17:37+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:17:37+0100 INFO     
+2026-01-28 10:17:37+0100 INFO     TASK [Gather facts for first time] *********************************************
+2026-01-28 10:17:38+0100 INFO     [WARNING]: Platform linux on host 145.38.186.201 is using the discovered Python
+2026-01-28 10:17:38+0100 INFO     interpreter at /usr/bin/python3.10, but future installation of another Python
+2026-01-28 10:17:38+0100 INFO     interpreter could change the meaning of that path. See
+2026-01-28 10:17:38+0100 INFO     https://docs.ansible.com/ansible-
+2026-01-28 10:17:38+0100 INFO     core/2.18/reference_appendices/interpreter_discovery.html for more information.
+2026-01-28 10:17:38+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:17:38+0100 INFO     
+2026-01-28 10:17:38+0100 INFO     TASK [CO config] ***************************************************************
+2026-01-28 10:17:38+0100 INFO     included: /deploymentscripts/31b09c15-8a87-4a0c-93ef-ad92eba15b6d/plugins/cf3875de-3a06-40a9-aa8f-fb2fd4b7c3b5/tasks/co-config.yml for 145.38.186.201
+2026-01-28 10:17:38+0100 INFO     
+2026-01-28 10:17:38+0100 INFO     TASK [Install required packages] ***********************************************
+2026-01-28 10:17:40+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:17:40+0100 INFO     
+2026-01-28 10:17:40+0100 INFO     TASK [Create src dir] **********************************************************
+2026-01-28 10:17:40+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:40+0100 INFO     
+2026-01-28 10:17:40+0100 INFO     TASK [Put CO config] ***********************************************************
+2026-01-28 10:17:42+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:42+0100 INFO     
+2026-01-28 10:17:42+0100 INFO     TASK [Add sudoers group if co_passwordless_sudo is true] ***********************
+2026-01-28 10:17:42+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:42+0100 INFO     
+2026-01-28 10:17:42+0100 INFO     TASK [Give Sudoers group root privileges without password] *********************
+2026-01-28 10:17:43+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:43+0100 INFO     
+2026-01-28 10:17:43+0100 INFO     TASK [Add fuse group for copying from windows to this VM] **********************
+2026-01-28 10:17:43+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:43+0100 INFO     
+2026-01-28 10:17:43+0100 INFO     TASK [Copy user cron job] ******************************************************
+2026-01-28 10:17:44+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:44+0100 INFO     
+2026-01-28 10:17:44+0100 INFO     TASK [Run user cron job for the first time] ************************************
+2026-01-28 10:17:47+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:47+0100 INFO     
+2026-01-28 10:17:47+0100 INFO     TASK [Create user cron job] ****************************************************
+2026-01-28 10:17:48+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:48+0100 INFO     
+2026-01-28 10:17:48+0100 INFO     TASK [Copy logrotate config] ***************************************************
+2026-01-28 10:17:49+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:49+0100 INFO     
+2026-01-28 10:17:49+0100 INFO     TASK [CO totp] *****************************************************************
+2026-01-28 10:17:49+0100 INFO     included: /deploymentscripts/31b09c15-8a87-4a0c-93ef-ad92eba15b6d/plugins/cf3875de-3a06-40a9-aa8f-fb2fd4b7c3b5/tasks/co-totp.yml for 145.38.186.201
+2026-01-28 10:17:49+0100 INFO     
+2026-01-28 10:17:49+0100 INFO     TASK [Install required packages] ***********************************************
+2026-01-28 10:17:50+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:17:50+0100 INFO     
+2026-01-28 10:17:50+0100 INFO     TASK [Copy totp pam script] ****************************************************
+2026-01-28 10:17:51+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:51+0100 INFO     
+2026-01-28 10:17:51+0100 INFO     TASK [Create pam entry for totp] ***********************************************
+2026-01-28 10:17:52+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:52+0100 INFO     
+2026-01-28 10:17:52+0100 INFO     TASK [Update pam to use totp for authentication] *******************************
+2026-01-28 10:17:53+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:53+0100 INFO     
+2026-01-28 10:17:53+0100 INFO     TASK [Update pam to use totp for authentication] *******************************
+2026-01-28 10:17:53+0100 INFO     skipping: [145.38.186.201] => (item=/etc/pam.d/password-auth) 
+2026-01-28 10:17:53+0100 INFO     skipping: [145.38.186.201] => (item=/etc/pam.d/system-auth) 
+2026-01-28 10:17:53+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:17:53+0100 INFO     
+2026-01-28 10:17:53+0100 INFO     TASK [CO webdav] ***************************************************************
+2026-01-28 10:17:53+0100 INFO     included: /deploymentscripts/31b09c15-8a87-4a0c-93ef-ad92eba15b6d/plugins/cf3875de-3a06-40a9-aa8f-fb2fd4b7c3b5/tasks/co-webdav.yml for 145.38.186.201
+2026-01-28 10:17:53+0100 INFO     
+2026-01-28 10:17:53+0100 INFO     TASK [Install required packages] ***********************************************
+2026-01-28 10:17:54+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:17:54+0100 INFO     
+2026-01-28 10:17:54+0100 INFO     TASK [Get rclone installation script] ******************************************
+2026-01-28 10:17:55+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:17:55+0100 INFO     
+2026-01-28 10:17:55+0100 INFO     TASK [Run installation script] *************************************************
+2026-01-28 10:18:07+0100 INFO     ASYNC OK on 145.38.186.201: jid=j741761087968.4962
+2026-01-28 10:18:07+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:07+0100 INFO     
+2026-01-28 10:18:07+0100 INFO     TASK [Clean up installation script] ********************************************
+2026-01-28 10:18:07+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:07+0100 INFO     
+2026-01-28 10:18:07+0100 INFO     TASK [Create symbolic link /sbin/mount.rclone -> /usr/bin/rclone] **************
+2026-01-28 10:18:07+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:07+0100 INFO     
+2026-01-28 10:18:07+0100 INFO     TASK [Add or uncomment 'user_allow_other' in /etc/fuse.conf] *******************
+2026-01-28 10:18:08+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:08+0100 INFO     
+2026-01-28 10:18:08+0100 INFO     TASK [Create script for secret] ************************************************
+2026-01-28 10:18:09+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:09+0100 INFO     
+2026-01-28 10:18:09+0100 INFO     TASK [Copy mount cron job] *****************************************************
+2026-01-28 10:18:10+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:10+0100 INFO     
+2026-01-28 10:18:10+0100 INFO     TASK [Run mount cron job for the first time] ***********************************
+2026-01-28 10:18:11+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:11+0100 INFO     
+2026-01-28 10:18:11+0100 INFO     TASK [Create mount cron job webdav] ********************************************
+2026-01-28 10:18:11+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:11+0100 INFO     
+2026-01-28 10:18:11+0100 INFO     TASK [CO irods] ****************************************************************
+2026-01-28 10:18:11+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:18:11+0100 INFO     
+2026-01-28 10:18:11+0100 INFO     TASK [OS monitoring tasks] *****************************************************
+2026-01-28 10:18:11+0100 INFO     included: /deploymentscripts/31b09c15-8a87-4a0c-93ef-ad92eba15b6d/plugins/cf3875de-3a06-40a9-aa8f-fb2fd4b7c3b5/tasks/co-os-monitoring.yml for 145.38.186.201
+2026-01-28 10:18:11+0100 INFO     
+2026-01-28 10:18:11+0100 INFO     TASK [Copy FS usage check] *****************************************************
+2026-01-28 10:18:12+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:12+0100 INFO     
+2026-01-28 10:18:12+0100 INFO     TASK [Copy disk full template] *************************************************
+2026-01-28 10:18:13+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:13+0100 INFO     
+2026-01-28 10:18:13+0100 INFO     TASK [Create root FS full job] *************************************************
+2026-01-28 10:18:14+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:14+0100 INFO     
+2026-01-28 10:18:14+0100 INFO     PLAY RECAP *********************************************************************
+2026-01-28 10:18:14+0100 INFO     145.38.186.201             : ok=33   changed=24   unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
+2026-01-28 10:18:14+0100 INFO     Running command finished with code: 0
+2026-01-28 10:18:14+0100 INFO     Running plugin SRC-CO finished with code: 0
+2026-01-28 10:18:14+0100 INFO     Downloading plugin SRC-Nginx ...
+2026-01-28 10:18:14+0100 INFO     Cloning git plugin-nginx.yml rsc-plugin-nginx-1.1.4 ...
+2026-01-28 10:18:16+0100 INFO     Cloned plugin-nginx.yml rsc-plugin-nginx-1.1.4
+2026-01-28 10:18:16+0100 INFO     Generating parameters for plugin SRC-Nginx ...
+2026-01-28 10:18:16+0100 INFO     disable_log [plugin SRC-Nginx]:False
+2026-01-28 10:18:16+0100 INFO     Running plugin SRC-Nginx ...
+2026-01-28 10:18:19+0100 INFO     
+2026-01-28 10:18:19+0100 INFO     PLAY [Install and configure nginx] *********************************************
+2026-01-28 10:18:19+0100 INFO     
+2026-01-28 10:18:19+0100 INFO     TASK [Gathering Facts] *********************************************************
+2026-01-28 10:18:21+0100 INFO     [WARNING]: Platform linux on host 145.38.186.201 is using the discovered Python
+2026-01-28 10:18:21+0100 INFO     interpreter at /usr/bin/python3.10, but future installation of another Python
+2026-01-28 10:18:21+0100 INFO     interpreter could change the meaning of that path. See
+2026-01-28 10:18:21+0100 INFO     https://docs.ansible.com/ansible-
+2026-01-28 10:18:21+0100 INFO     core/2.18/reference_appendices/interpreter_discovery.html for more information.
+2026-01-28 10:18:21+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:18:21+0100 INFO     
+2026-01-28 10:18:21+0100 INFO     TASK [Wait for system to become reachable] *************************************
+2026-01-28 10:18:23+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:18:23+0100 INFO     
+2026-01-28 10:18:23+0100 INFO     TASK [Gather facts for first time] *********************************************
+2026-01-28 10:18:23+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:18:23+0100 INFO     
+2026-01-28 10:18:23+0100 INFO     TASK [Install required packages other distros] *********************************
+2026-01-28 10:18:31+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:31+0100 INFO     
+2026-01-28 10:18:31+0100 INFO     TASK [Install required packages CentOS 7] **************************************
+2026-01-28 10:18:31+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:18:31+0100 INFO     
+2026-01-28 10:18:31+0100 INFO     TASK [Ensure snapd is enabled] *************************************************
+2026-01-28 10:18:32+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:18:32+0100 INFO     
+2026-01-28 10:18:32+0100 INFO     TASK [Enable classic snap support] *********************************************
+2026-01-28 10:18:33+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:18:33+0100 INFO     
+2026-01-28 10:18:33+0100 INFO     TASK [Update snap after install] ***********************************************
+2026-01-28 10:18:37+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:37+0100 INFO     
+2026-01-28 10:18:37+0100 INFO     TASK [Ensure snapd is ready] ***************************************************
+2026-01-28 10:18:37+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:37+0100 INFO     
+2026-01-28 10:18:37+0100 INFO     TASK [Install certbot] *********************************************************
+2026-01-28 10:18:44+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:44+0100 INFO     
+2026-01-28 10:18:44+0100 INFO     TASK [Symlink certbot into place] **********************************************
+2026-01-28 10:18:45+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:45+0100 INFO     
+2026-01-28 10:18:45+0100 INFO     TASK [Create app location config dir] ******************************************
+2026-01-28 10:18:45+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:45+0100 INFO     
+2026-01-28 10:18:45+0100 INFO     TASK [Add authentication.conf] *************************************************
+2026-01-28 10:18:46+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:46+0100 INFO     
+2026-01-28 10:18:46+0100 INFO     TASK [Add map directive] *******************************************************
+2026-01-28 10:18:47+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:47+0100 INFO     
+2026-01-28 10:18:47+0100 INFO     TASK [Copy nginx config] *******************************************************
+2026-01-28 10:18:48+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:48+0100 INFO     
+2026-01-28 10:18:48+0100 INFO     TASK [Remove default nginx config] *********************************************
+2026-01-28 10:18:48+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:48+0100 INFO     
+2026-01-28 10:18:48+0100 INFO     TASK [Increase server name hash bucket size to 128] ****************************
+2026-01-28 10:18:49+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:49+0100 INFO     
+2026-01-28 10:18:49+0100 INFO     TASK [Unlimited client max body size] ******************************************
+2026-01-28 10:18:49+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:49+0100 INFO     
+2026-01-28 10:18:49+0100 INFO     TASK [Remove potential duplicate listen configs] *******************************
+2026-01-28 10:18:49+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:18:49+0100 INFO     
+2026-01-28 10:18:49+0100 INFO     TASK [Make sure nginx is enabled] **********************************************
+2026-01-28 10:18:50+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:18:50+0100 INFO     
+2026-01-28 10:18:50+0100 INFO     TASK [Make sure nginx is started] **********************************************
+2026-01-28 10:18:50+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:18:50+0100 INFO     
+2026-01-28 10:18:50+0100 INFO     TASK [Reload nginx] ************************************************************
+2026-01-28 10:18:51+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:51+0100 INFO     
+2026-01-28 10:18:51+0100 INFO     TASK [certbot test] ************************************************************
+2026-01-28 10:18:51+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:18:51+0100 INFO     
+2026-01-28 10:18:51+0100 INFO     TASK [Run Certbot] *************************************************************
+2026-01-28 10:19:04+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:19:04+0100 INFO     
+2026-01-28 10:19:04+0100 INFO     TASK [Create certbot cron job (daily)] *****************************************
+2026-01-28 10:19:05+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:19:05+0100 INFO     
+2026-01-28 10:19:05+0100 INFO     TASK [Create certbot cron job (on reboot)] *************************************
+2026-01-28 10:19:05+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:19:05+0100 INFO     
+2026-01-28 10:19:05+0100 INFO     PLAY RECAP *********************************************************************
+2026-01-28 10:19:05+0100 INFO     145.38.186.201             : ok=24   changed=17   unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
+2026-01-28 10:19:05+0100 INFO     Running command finished with code: 0
+2026-01-28 10:19:05+0100 INFO     Running plugin SRC-Nginx finished with code: 0
+2026-01-28 10:19:06+0100 INFO     Downloading plugin SRC-External plugin ...
+2026-01-28 10:19:06+0100 INFO     Cloning git plugin-external-plugin.yml rsc-plugin-external-plugin-2.0.10 ...
+2026-01-28 10:19:08+0100 INFO     Cloned plugin-external-plugin.yml rsc-plugin-external-plugin-2.0.10
+2026-01-28 10:19:08+0100 INFO     Generating parameters for plugin SRC-External plugin ...
+2026-01-28 10:19:08+0100 INFO     disable_log [plugin SRC-External plugin]:False
+2026-01-28 10:19:08+0100 INFO     Downloading remote plugin LabelSutdio Local ...
+2026-01-28 10:19:08+0100 INFO     Cloning git LabelStudio/LabelStudio_SRAM.yml  ...
+2026-01-28 10:19:09+0100 INFO     Cloned LabelStudio/LabelStudio_SRAM.yml 
+2026-01-28 10:19:09+0100 INFO     Download completed
+2026-01-28 10:19:09+0100 INFO     Generating parameters for remote plugin LabelSutdio Local ...
+2026-01-28 10:19:09+0100 INFO     Parameters are generated.
+2026-01-28 10:19:09+0100 INFO     disable_log [plugin LabelSutdio Local]:False
+2026-01-28 10:19:09+0100 INFO     Running remote plugin LabelSutdio Local in SRC-External plugin plugin
+2026-01-28 10:19:09+0100 INFO     Running plugin SRC-External plugin ...
+2026-01-28 10:19:13+0100 INFO     [WARNING]: Found variable using reserved name: timeout
+2026-01-28 10:19:13+0100 INFO     
+2026-01-28 10:19:13+0100 INFO     PLAY [Research cloud run external plugins] *************************************
+2026-01-28 10:19:13+0100 INFO     
+2026-01-28 10:19:13+0100 INFO     TASK [Wait for system to become reachable] *************************************
+2026-01-28 10:19:14+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:19:14+0100 INFO     
+2026-01-28 10:19:14+0100 INFO     TASK [Gather facts for the first time] *****************************************
+2026-01-28 10:19:16+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:19:16+0100 INFO     
+2026-01-28 10:19:16+0100 INFO     TASK [Set python version] ******************************************************
+2026-01-28 10:19:16+0100 INFO     [WARNING]: Platform linux on host 145.38.186.201 is using the discovered Python
+2026-01-28 10:19:16+0100 INFO     interpreter at /usr/bin/python3.10, but future installation of another Python
+2026-01-28 10:19:16+0100 INFO     interpreter could change the meaning of that path. See
+2026-01-28 10:19:16+0100 INFO     https://docs.ansible.com/ansible-
+2026-01-28 10:19:16+0100 INFO     core/2.18/reference_appendices/interpreter_discovery.html for more information.
+2026-01-28 10:19:16+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:19:16+0100 INFO     
+2026-01-28 10:19:16+0100 INFO     TASK [Install required packages] ***********************************************
+2026-01-28 10:19:18+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:19:18+0100 INFO     
+2026-01-28 10:19:18+0100 INFO     TASK [Install dependencies] ****************************************************
+2026-01-28 10:19:18+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:19:18+0100 INFO     
+2026-01-28 10:19:18+0100 INFO     TASK [Install dependencies] ****************************************************
+2026-01-28 10:19:18+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:19:18+0100 INFO     
+2026-01-28 10:19:18+0100 INFO     TASK [Upgrade pip] *************************************************************
+2026-01-28 10:19:18+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:19:18+0100 INFO     
+2026-01-28 10:19:18+0100 INFO     TASK [Install Ansible using pip] ***********************************************
+2026-01-28 10:19:18+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:19:18+0100 INFO     
+2026-01-28 10:19:18+0100 INFO     TASK [Install dependencies] ****************************************************
+2026-01-28 10:19:18+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:19:18+0100 INFO     
+2026-01-28 10:19:18+0100 INFO     TASK [Install pip for Fedora] **************************************************
+2026-01-28 10:19:18+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:19:18+0100 INFO     
+2026-01-28 10:19:18+0100 INFO     TASK [Install Ansible using pip] ***********************************************
+2026-01-28 10:19:18+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:19:18+0100 INFO     
+2026-01-28 10:19:18+0100 INFO     TASK [Set deadsnakes key download location] ************************************
+2026-01-28 10:19:18+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:19:18+0100 INFO     
+2026-01-28 10:19:18+0100 INFO     TASK [Download deadsnakes key] *************************************************
+2026-01-28 10:19:19+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:19:19+0100 INFO     
+2026-01-28 10:19:19+0100 INFO     TASK [Add deadsnakes repo] *****************************************************
+2026-01-28 10:19:26+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:19:26+0100 INFO     
+2026-01-28 10:19:26+0100 INFO     TASK [Install python] **********************************************************
+2026-01-28 10:19:32+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:19:32+0100 INFO     
+2026-01-28 10:19:32+0100 INFO     TASK [Install pip] *************************************************************
+2026-01-28 10:19:35+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:19:35+0100 INFO     
+2026-01-28 10:19:35+0100 INFO     TASK [Install ansible] *********************************************************
+2026-01-28 10:19:56+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:19:56+0100 INFO     
+2026-01-28 10:19:56+0100 INFO     TASK [update secure_path] ******************************************************
+2026-01-28 10:19:56+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:19:56+0100 INFO     
+2026-01-28 10:19:56+0100 INFO     TASK [Install Docker Python SDK] ***********************************************
+2026-01-28 10:19:57+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:19:57+0100 INFO     
+2026-01-28 10:19:57+0100 INFO     TASK [Install Ansible Docker community collection] *****************************
+2026-01-28 10:20:11+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:20:11+0100 INFO     
+2026-01-28 10:20:11+0100 INFO     TASK [Create rsc plugin folder] ************************************************
+2026-01-28 10:20:11+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:20:11+0100 INFO     
+2026-01-28 10:20:11+0100 INFO     TASK [Copy plugin folder structure] ********************************************
+2026-01-28 10:20:14+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:20:14+0100 INFO     
+2026-01-28 10:20:14+0100 INFO     TASK [Set plugin permissions] **************************************************
+2026-01-28 10:20:14+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:20:14+0100 INFO     
+2026-01-28 10:20:14+0100 INFO     TASK [Create /etc/ansible if it does not exists] *******************************
+2026-01-28 10:20:15+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:20:15+0100 INFO     
+2026-01-28 10:20:15+0100 INFO     TASK [Copy to /etc/ansible] ****************************************************
+2026-01-28 10:20:16+0100 INFO     changed: [145.38.186.201]
+2026-01-28 10:20:16+0100 INFO     
+2026-01-28 10:20:16+0100 INFO     TASK [Check for plugin requirements file] **************************************
+2026-01-28 10:20:16+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:20:16+0100 INFO     
+2026-01-28 10:20:16+0100 INFO     TASK [Check for plugin requirements file 2] ************************************
+2026-01-28 10:20:16+0100 INFO     ok: [145.38.186.201]
+2026-01-28 10:20:16+0100 INFO     
+2026-01-28 10:20:16+0100 INFO     TASK [Set path to file 1 if it exists] *****************************************
+2026-01-28 10:20:17+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:20:17+0100 INFO     
+2026-01-28 10:20:17+0100 INFO     TASK [Set path to file 2 if file 1 does not exist and file 2 exists] ***********
+2026-01-28 10:20:17+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:20:17+0100 INFO     
+2026-01-28 10:20:17+0100 INFO     TASK [Install role dependencies for Ansible plugin] ****************************
+2026-01-28 10:20:17+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:20:17+0100 INFO     
+2026-01-28 10:20:17+0100 INFO     TASK [Install collection dependencies for Ansible plugin] **********************
+2026-01-28 10:20:17+0100 INFO     skipping: [145.38.186.201]
+2026-01-28 10:20:17+0100 INFO     
+2026-01-28 10:20:17+0100 INFO     TASK [Run Ansible plugin] ******************************************************
+2026-01-28 10:26:11+0100 INFO     [WARNING]: As of Ansible 2.4, the parameter 'executable' is no longer supported
+2026-01-28 10:26:11+0100 INFO     with the 'command' module. Not using '/bin/bash'.
+2026-01-28 10:26:11+0100 INFO     fatal: [145.38.186.201]: FAILED! => {"ansible_job_id": "j776597127019.10163", "changed": true, "cmd": ["ansible-playbook", "--connection=[REDACTED] "-b", "--extra-vars=[REDACTED] "/rsc/plugins/4794fa94-e20e-4563-94e3-c81933c23b07/LabelStudio/LabelStudio_SRAM.yml"], "delta": "0:05:45.002818", "end": "2026-01-28 10:26:03.389792", "finished": 1, "msg": "non-zero return code", "rc": 2, "results_file": "/root/.ansible_async/j776597127019.10163", "start": "2026-01-28 10:20:18.386974", "started": 1, "stderr": "[WARNING]: No inventory was parsed, only implicit localhost is available\n[WARNING]: provided hosts list is empty, only localhost is available. Note that\nthe implicit localhost does not match 'all'\n[WARNING]: Reset is not implemented for this connection", "stderr_lines": ["[WARNING]: No inventory was parsed, only implicit localhost is available", "[WARNING]: provided hosts list is empty, only localhost is available. Note that", "the implicit localhost does not match 'all'", "[WARNING]: Reset is not implemented for this connection"], "stdout": "\nPLAY [Deploy Label Studio with SRAM authentication] ****************************\n\nTASK [Gathering Facts] *********************************************************\nok: [localhost]\n\nTASK [Wait for system to become reachable] *************************************\nok: [localhost]\n\nTASK [Gather facts] ************************************************************\nok: [localhost]\n\nTASK [Update apt cache (Debian/Ubuntu)] ****************************************\nok: [localhost]\n\nTASK [Install Docker prerequisites (Debian/Ubuntu)] ****************************\nok: [localhost]\n\nTASK [Add Docker GPG key (Debian/Ubuntu)] **************************************\nchanged: [localhost]\n\nTASK [Add Docker repository (Debian/Ubuntu)] ***********************************\nchanged: [localhost]\n\nTASK [Install Docker Engine and Compose plugin] ********************************\nchanged: [localhost]\n\nTASK [Install Docker (RedHat/CentOS)] ******************************************\nskipping: [localhost]\n\nTASK [Ensure Docker service is running and enabled] ****************************\nok: [localhost]\n\nTASK [Create application directory] ********************************************\nchanged: [localhost]\n\nTASK [Create Label Studio data directory] **************************************\nchanged: [localhost]\n\nTASK [Write docker-compose.yml for Label Studio] *******************************\nchanged: [localhost]\n\nTASK [Start Label Studio service] **********************************************\nchanged: [localhost]\n\nTASK [Wait for Label Studio to be healthy] *************************************\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (30 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (29 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (28 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (27 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (26 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (25 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (24 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (23 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (22 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (21 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (20 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (19 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (18 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (17 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (16 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (15 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (14 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (13 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (12 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (11 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (10 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (9 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (8 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (7 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (6 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (5 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (4 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (3 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (2 retries left).\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (1 retries left).\nfatal: [localhost]: FAILED! => {\"attempts\": 30, \"changed\": true, \"cmd\": \"docker inspect -f '{{.State.Health.Status}}' label-studio\", \"delta\": \"0:00:00.014504\", \"end\": \"2026-01-28 10:26:03.320269\", \"msg\": \"\", \"rc\": 0, \"start\": \"2026-01-28 10:26:03.305765\", \"stderr\": \"\", \"stderr_lines\": [], \"stdout\": \"unhealthy\", \"stdout_lines\": [\"unhealthy\"]}\n\nPLAY RECAP *********************************************************************\nlocalhost                  : ok=13   changed=7    unreachable=0    failed=1    skipped=1    rescued=0    ignored=0   ", "stdout_lines": ["", "PLAY [Deploy Label Studio with SRAM authentication] ****************************", "", "TASK [Gathering Facts] *********************************************************", "ok: [localhost]", "", "TASK [Wait for system to become reachable] *************************************", "ok: [localhost]", "", "TASK [Gather facts] ************************************************************", "ok: [localhost]", "", "TASK [Update apt cache (Debian/Ubuntu)] ****************************************", "ok: [localhost]", "", "TASK [Install Docker prerequisites (Debian/Ubuntu)] ****************************", "ok: [localhost]", "", "TASK [Add Docker GPG key (Debian/Ubuntu)] **************************************", "changed: [localhost]", "", "TASK [Add Docker repository (Debian/Ubuntu)] ***********************************", "changed: [localhost]", "", "TASK [Install Docker Engine and Compose plugin] ********************************", "changed: [localhost]", "", "TASK [Install Docker (RedHat/CentOS)] ******************************************", "skipping: [localhost]", "", "TASK [Ensure Docker service is running and enabled] ****************************", "ok: [localhost]", "", "TASK [Create application directory] ********************************************", "changed: [localhost]", "", "TASK [Create Label Studio data directory] **************************************", "changed: [localhost]", "", "TASK [Write docker-compose.yml for Label Studio] *******************************", "changed: [localhost]", "", "TASK [Start Label Studio service] **********************************************", "changed: [localhost]", "", "TASK [Wait for Label Studio to be healthy] *************************************", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (30 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (29 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (28 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (27 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (26 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (25 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (24 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (23 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (22 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (21 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (20 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (19 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (18 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (17 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (16 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (15 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (14 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (13 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (12 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (11 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (10 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (9 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (8 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (7 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (6 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (5 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (4 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (3 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (2 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (1 retries left).", "fatal: [localhost]: FAILED! => {\"attempts\": 30, \"changed\": true, \"cmd\": \"docker inspect -f '{{.State.Health.Status}}' label-studio\", \"delta\": \"0:00:00.014504\", \"end\": \"2026-01-28 10:26:03.320269\", \"msg\": \"\", \"rc\": 0, \"start\": \"2026-01-28 10:26:03.305765\", \"stderr\": \"\", \"stderr_lines\": [], \"stdout\": \"unhealthy\", \"stdout_lines\": [\"unhealthy\"]}", "", "PLAY RECAP *********************************************************************", "localhost                  : ok=13   changed=7    unreachable=0    failed=1    skipped=1    rescued=0    ignored=0   "]}
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC POLL on 145.38.186.201: jid=j776597127019.10163 started=1 finished=0
+2026-01-28 10:26:11+0100 INFO     ASYNC FAILED on 145.38.186.201: jid=j776597127019.10163
+2026-01-28 10:26:11+0100 INFO     
+2026-01-28 10:26:11+0100 INFO     PLAY RECAP *********************************************************************
+2026-01-28 10:26:11+0100 INFO     145.38.186.201             : ok=19   changed=12   unreachable=0    failed=1    skipped=12   rescued=0    ignored=0   
+2026-01-28 10:26:11+0100 INFO     Running command finished with code: 2
+2026-01-28 10:26:11+0100 INFO     Error in creating resource. Going to delete resource ...
+2026-01-28 10:26:11+0100 INFO     Deleting resource
+2026-01-28 10:26:11+0100 INFO     Attempting to remove DNS entry
+2026-01-28 10:26:34+0100 INFO     DNS entry removed
+2026-01-28 10:26:34+0100 INFO     Generating Terraform backend file
+2026-01-28 10:26:34+0100 INFO     Generating terraform parameters ...
+2026-01-28 10:26:34+0100 INFO     Terraform parameters are generated
+2026-01-28 10:26:34+0100 INFO     Running Terraform init for workspace 31b09c15-8a87-4a0c-93ef-ad92eba15b6d
+2026-01-28 10:26:47+0100 INFO     Running Terraform destroy for workspace 31b09c15-8a87-4a0c-93ef-ad92eba15b6d
+2026-01-28 10:27:48+0100 INFO     Terraform destroy completed.
+2026-01-28 10:27:48+0100 INFO     plugins folder not found.
+2026-01-28 10:27:48+0100 INFO     Removing workspace 31b09c15-8a87-4a0c-93ef-ad92eba15b6d folder
+2026-01-28 10:27:49+0100 INFO     Resource is deleted
+2026-01-28 10:27:49+0100 INFO     Finished WorkspaceAction (ID: 3ee84016-f09f-4eab-a469-78b0055aadb9): create workspace 31b09c15-8a87-4a0c-93ef-ad92eba15b6d with result {'error': 'Command exited with non-zero code 2: [WARNING]: Found variable using reserved name: timeout\n[WARNING]: Platform linux on host 145.38.186.201 is using the discovered Python\ninterpreter at /usr/bin/python3.10, but future installation of another Python\ninterpreter could change the meaning of that path. See\nhttps://docs.ansible.com/ansible-\ncore/2.18/reference_appendices/interpreter_discovery.html for more information.\n[WARNING]: As of Ansible 2.4, the parameter \'executable\' is no longer supported\nwith the \'command\' module. Not using \'/bin/bash\'.\nfatal: [145.38.186.201]: FAILED! => {"ansible_job_id": "j776597127019.10163", "changed": true, "cmd": ["ansible-playbook", "--connection=[REDACTED] "-b", "--extra-vars=[REDACTED] "/rsc/plugins/4794fa94-e20e-4563-94e3-c81933c23b07/LabelStudio/LabelStudio_SRAM.yml"], "delta": "0:05:45.002818", "end": "2026-01-28 10:26:03.389792", "finished": 1, "msg": "non-zero return code", "rc": 2, "results_file": "/root/.ansible_async/j776597127019.10163", "start": "2026-01-28 10:20:18.386974", "started": 1, "stderr": "[WARNING]: No inventory was parsed, only implicit localhost is available\\n[WARNING]: provided hosts list is empty, only localhost is available. Note that\\nthe implicit localhost does not match \'all\'\\n[WARNING]: Reset is not implemented for this connection", "stderr_lines": ["[WARNING]: No inventory was parsed, only implicit localhost is available", "[WARNING]: provided hosts list is empty, only localhost is available. Note that", "the implicit localhost does not match \'all\'", "[WARNING]: Reset is not implemented for this connection"], "stdout": "\\nPLAY [Deploy Label Studio with SRAM authentication] ****************************\\n\\nTASK [Gathering Facts] *********************************************************\\nok: [localhost]\\n\\nTASK [Wait for system to become reachable] *************************************\\nok: [localhost]\\n\\nTASK [Gather facts] ************************************************************\\nok: [localhost]\\n\\nTASK [Update apt cache (Debian/Ubuntu)] ****************************************\\nok: [localhost]\\n\\nTASK [Install Docker prerequisites (Debian/Ubuntu)] ****************************\\nok: [localhost]\\n\\nTASK [Add Docker GPG key (Debian/Ubuntu)] **************************************\\nchanged: [localhost]\\n\\nTASK [Add Docker repository (Debian/Ubuntu)] ***********************************\\nchanged: [localhost]\\n\\nTASK [Install Docker Engine and Compose plugin] ********************************\\nchanged: [localhost]\\n\\nTASK [Install Docker (RedHat/CentOS)] ******************************************\\nskipping: [localhost]\\n\\nTASK [Ensure Docker service is running and enabled] ****************************\\nok: [localhost]\\n\\nTASK [Create application directory] ********************************************\\nchanged: [localhost]\\n\\nTASK [Create Label Studio data directory] **************************************\\nchanged: [localhost]\\n\\nTASK [Write docker-compose.yml for Label Studio] *******************************\\nchanged: [localhost]\\n\\nTASK [Start Label Studio service] **********************************************\\nchanged: [localhost]\\n\\nTASK [Wait for Label Studio to be healthy] *************************************\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (30 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (29 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (28 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (27 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (26 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (25 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (24 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (23 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (22 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (21 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (20 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (19 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (18 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (17 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (16 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (15 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (14 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (13 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (12 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (11 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (10 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (9 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (8 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (7 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (6 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (5 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (4 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (3 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (2 retries left).\\nFAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (1 retries left).\\nfatal: [localhost]: FAILED! => {\\"attempts\\": 30, \\"changed\\": true, \\"cmd\\": \\"docker inspect -f \'{{.State.Health.Status}}\' label-studio\\", \\"delta\\": \\"0:00:00.014504\\", \\"end\\": \\"2026-01-28 10:26:03.320269\\", \\"msg\\": \\"\\", \\"rc\\": 0, \\"start\\": \\"2026-01-28 10:26:03.305765\\", \\"stderr\\": \\"\\", \\"stderr_lines\\": [], \\"stdout\\": \\"unhealthy\\", \\"stdout_lines\\": [\\"unhealthy\\"]}\\n\\nPLAY RECAP *********************************************************************\\nlocalhost                  : ok=13   changed=7    unreachable=0    failed=1    skipped=1    rescued=0    ignored=0   ", "stdout_lines": ["", "PLAY [Deploy Label Studio with SRAM authentication] ****************************", "", "TASK [Gathering Facts] *********************************************************", "ok: [localhost]", "", "TASK [Wait for system to become reachable] *************************************", "ok: [localhost]", "", "TASK [Gather facts] ************************************************************", "ok: [localhost]", "", "TASK [Update apt cache (Debian/Ubuntu)] ****************************************", "ok: [localhost]", "", "TASK [Install Docker prerequisites (Debian/Ubuntu)] ****************************", "ok: [localhost]", "", "TASK [Add Docker GPG key (Debian/Ubuntu)] **************************************", "changed: [localhost]", "", "TASK [Add Docker repository (Debian/Ubuntu)] ***********************************", "changed: [localhost]", "", "TASK [Install Docker Engine and Compose plugin] ********************************", "changed: [localhost]", "", "TASK [Install Docker (RedHat/CentOS)] ******************************************", "skipping: [localhost]", "", "TASK [Ensure Docker service is running and enabled] ****************************", "ok: [localhost]", "", "TASK [Create application directory] ********************************************", "changed: [localhost]", "", "TASK [Create Label Studio data directory] **************************************", "changed: [localhost]", "", "TASK [Write docker-compose.yml for Label Studio] *******************************", "changed: [localhost]", "", "TASK [Start Label Studio service] **********************************************", "changed: [localhost]", "", "TASK [Wait for Label Studio to be healthy] *************************************", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (30 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (29 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (28 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (27 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (26 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (25 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (24 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (23 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (22 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (21 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (20 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (19 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (18 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (17 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (16 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (15 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (14 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (13 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (12 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (11 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (10 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (9 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (8 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (7 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (6 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (5 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (4 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (3 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (2 retries left).", "FAILED - RETRYING: [localhost]: Wait for Label Studio to be healthy (1 retries left).", "fatal: [localhost]: FAILED! => {\\"attempts\\": 30, \\"changed\\": true, \\"cmd\\": \\"docker inspect -f \'{{.State.Health.Status}}\' label-studio\\", \\"delta\\": \\"0:00:00.014504\\", \\"end\\": \\"2026-01-28 10:26:03.320269\\", \\"msg\\": \\"\\", \\"rc\\": 0, \\"start\\": \\"2026-01-28 10:26:03.305765\\", \\"stderr\\": \\"\\", \\"stderr_lines\\": [], \\"stdout\\": \\"unhealthy\\", \\"stdout_lines\\": [\\"unhealthy\\"]}", "", "PLAY RECAP *********************************************************************", "localhost                  : ok=13   changed=7    unreachable=0    failed=1    skipped=1    rescued=0    ignored=0   "]}\n'}
+2026-01-28 10:27:49+0100 INFO     Finished updating workspace 31b09c15-8a87-4a0c-93ef-ad92eba15b6d

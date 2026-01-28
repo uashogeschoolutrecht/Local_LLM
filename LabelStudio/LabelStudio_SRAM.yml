@@ -123,22 +123,16 @@
               volumes:
                 - label-studio-data:/label-studio/data
               environment:
+                # ===========================================
                 # Disable internal authentication - SRAM handles auth
+                # ===========================================
                 - LABEL_STUDIO_DISABLE_SIGNUP_WITHOUT_LINK=true
-                # Allow user creation from REMOTE_USER header
-                - LABEL_STUDIO_USERNAME_FROM_HEADER=REMOTE_USER
                 # Trust the proxy headers
                 - LABEL_STUDIO_HOST={{ '${LABEL_STUDIO_HOST:-http://localhost:8080}' }}
-                # Database settings (SQLite by default, can be changed to PostgreSQL)
+                # Database settings (SQLite by default)
                 - DJANGO_DB=default
-                # Optional: Set default user role
-                - LABEL_STUDIO_USER_DEFAULT_ROLE=user
-              healthcheck:
-                test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-                interval: 10s
-                timeout: 5s
-                retries: 5
-                start_period: 30s
+                # Default role for users
+                - LABEL_STUDIO_USER_DEFAULT_ROLE=annotator
 
           volumes:
             label-studio-data:
@@ -153,12 +147,24 @@
       args:
         chdir: "{{ app_dir }}"
 
-    - name: Wait for Label Studio to be healthy
-      shell: docker inspect -f {% raw %}'{{.State.Health.Status}}'{% endraw %} label-studio
-      register: labelstudio_health
-      until: labelstudio_health.stdout == 'healthy'
-      retries: 30
-      delay: 10
+    - name: Wait for Label Studio container to be running
+      shell: docker inspect -f {% raw %}'{{.State.Running}}'{% endraw %} label-studio
+      register: container_running
+      until: container_running.stdout == 'true'
+      retries: 10
+      delay: 5
+
+    - name: Wait for Label Studio to respond on port 8080
+      wait_for:
+        host: 127.0.0.1
+        port: 8080
+        delay: 10
+        timeout: 300
+        state: started
+
+    - name: Additional wait for Label Studio to fully initialize
+      pause:
+        seconds: 30
 
     # ============================================================
     # Nginx Configuration for SRAM Authentication
