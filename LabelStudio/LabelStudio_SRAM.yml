@@ -168,10 +168,6 @@
                 # Application settings
                 # ===========================================
                 - LABEL_STUDIO_HOST={{ '${LABEL_STUDIO_HOST:-http://localhost:8080}' }}
-<<<<<<< HEAD
-                # Default role for users
-=======
->>>>>>> 097943a01fd98036565525fff5606d4e8fe65f97
                 - LABEL_STUDIO_USER_DEFAULT_ROLE=annotator
 
           volumes:
