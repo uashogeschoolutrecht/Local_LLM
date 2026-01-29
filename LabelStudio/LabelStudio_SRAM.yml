@@ -148,6 +148,7 @@
                 - "127.0.0.1:8080:8080"
               volumes:
                 - label-studio-data:/label-studio/data
+                - /mnt/BamBam:/label-studio/BamBam:ro
               environment:
                 # ===========================================
                 # PostgreSQL Database Connection
@@ -178,6 +179,11 @@
                 # ===========================================
                 - LABEL_STUDIO_HOST=https://{{ rsc_nginx_service_url | default(ansible_fqdn) }}
                 - LABEL_STUDIO_USER_DEFAULT_ROLE=annotator
+                
+                # ===========================================
+                # Local Files Storage
+                # ===========================================
+                - LOCAL_FILES_SERVING_ENABLED=true
 
           volumes:
             postgres-data:
