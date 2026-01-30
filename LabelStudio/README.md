@@ -147,6 +147,132 @@ grep client_max_body_size /etc/nginx/app-location-conf.d/labelstudio.conf
 
 ## Data Management
 
+### Using SurfDrive / ResearchDrive with rclone
+
+Label Studio can access video and image files from SurfDrive/ResearchDrive using rclone.
+
+#### Initial Setup
+
+1. **Configure rclone** (one-time setup):
+   ```bash
+   rclone config
+   # Follow prompts to add your SurfDrive/ResearchDrive
+   # Name it something like: ResearchDrive_BamBam
+   ```
+
+2. **Create mount point**:
+   ```bash
+   sudo mkdir -p /mnt/BamBam
+   sudo chown $USER:$USER /mnt/BamBam
+   ```
+
+3. **Mount your research data**:
+   ```bash
+   rclone mount "ResearchDrive_BamBam:250814736_BAMBAM (Projectfolder)" /mnt/BamBam \
+     --allow-other \
+     --vfs-cache-mode writes \
+     --daemon
+   ```
+
+4. **Verify mount**:
+   ```bash
+   ls -la /mnt/BamBam/
+   # Should show your project folders
+   ```
+
+5. **Restart Label Studio** to pick up the mount:
+   ```bash
+   cd /opt/label-studio
+   sudo docker compose down
+   sudo docker compose up -d
+   ```
+
+6. **Verify container can see files**:
+   ```bash
+   sudo docker exec -it label-studio ls -la /label-studio/BamBam/
+   # Should show your project folders
+   ```
+
+#### After Server Restart
+
+If your VM restarts, the rclone mount will be lost. Remount it with:
+
+```bash
+# 1. Remount rclone
+rclone mount "ResearchDrive_BamBam:250814736_BAMBAM (Projectfolder)" /mnt/BamBam \
+  --allow-other \
+  --vfs-cache-mode writes \
+  --daemon
+
+# 2. Verify mount is active
+ls -la /mnt/BamBam/
+
+# 3. Restart Docker containers to pick up the mount
+cd /opt/label-studio
+sudo docker compose down
+sudo docker compose up -d
+
+# 4. Verify container sees the files
+sudo docker exec -it label-studio ls -la /label-studio/BamBam/
+```
+
+#### Auto-mount on Boot (Optional)
+
+To automatically mount on server restart, create a systemd service:
+
+```bash
+# Create the service file
+sudo nano /etc/systemd/system/rclone-bambam.service
+```
+
+Add this content:
+```ini
+[Unit]
+Description=RClone mount for BamBam ResearchDrive
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+User=aras
+Group=aras
+ExecStart=/usr/bin/rclone mount \
+  "ResearchDrive_BamBam:250814736_BAMBAM (Projectfolder)" /mnt/BamBam \
+  --allow-other \
+  --vfs-cache-mode writes \
+  --vfs-cache-max-age 24h
+ExecStop=/bin/fusermount -u /mnt/BamBam
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Enable and start:
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable rclone-bambam.service
+sudo systemctl start rclone-bambam.service
+
+# Check status
+sudo systemctl status rclone-bambam.service
+```
+
+#### Connecting Storage in Label Studio
+
+1. Go to your project → **Settings → Cloud Storage**
+2. Click **Add Source Storage**
+3. Select **Local Files**
+4. Configure:
+   - **Storage Title**: `BamBam`
+   - **Absolute local path**: `/label-studio/BamBam/BAMBAM_Onderzoek`
+   - **Import Method**: `Files - Automatically creates a task for each storage object`
+   - **File Name Filter**: `.*\.mp4$` (for videos only)
+   - **Scan all sub-folders**: ✅ Toggle ON
+5. Click **Load Preview** to verify
+6. Click **Next** → **Sync Storage**
+
 ### Backup Label Studio Data
 
 ```bash
