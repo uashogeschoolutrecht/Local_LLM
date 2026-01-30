@@ -148,7 +148,7 @@
                 - "127.0.0.1:8080:8080"
               volumes:
                 - label-studio-data:/label-studio/data
-                - /mnt/BamBam:/label-studio/BamBam:ro
+                - /mnt/BamBam:/label-studio/BamBam
               environment:
                 # ===========================================
                 # PostgreSQL Database Connection
@@ -184,6 +184,18 @@
                 # Local Files Storage
                 # ===========================================
                 - LOCAL_FILES_SERVING_ENABLED=true
+                
+                # ===========================================
+                # Performance & Timeout Settings for Large Files (3GB+)
+                # ===========================================
+                - ML_TIMEOUT_PREDICT=600
+                - ML_TIMEOUT_TRAIN=600
+                - UWSGI_BUFFER_SIZE=65536
+                - DATA_UPLOAD_MAX_MEMORY_SIZE=5368709120
+                - NGINX_CLIENT_MAX_BODY_SIZE=5G
+                - UWSGI_HARAKIRI=600
+                - UWSGI_HTTP_TIMEOUT=600
+                - FILE_UPLOAD_MAX_MEMORY_SIZE=5368709120
 
           volumes:
             postgres-data:
@@ -257,8 +269,8 @@
               proxy_send_timeout 300;
               proxy_read_timeout 300;
               
-              # Handle large file uploads for data import
-              client_max_body_size 100M;
+              # Handle large file uploads for data import (3GB+ videos)
+              client_max_body_size 5G;
               proxy_request_buffering off;
           }
 
@@ -298,8 +310,8 @@
               proxy_send_timeout 300;
               proxy_read_timeout 300;
               
-              # Handle large file uploads
-              client_max_body_size 100M;
+              # Handle large file uploads (3GB+ videos)
+              client_max_body_size 5G;
               proxy_request_buffering off;
           }
 
@@ -331,6 +343,12 @@
               proxy_set_header X-Real-IP $remote_addr;
               proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
               proxy_set_header X-Forwarded-Proto $scheme;
+              
+              # Handle large video files
+              proxy_buffering off;
+              proxy_request_buffering off;
+              client_max_body_size 0;
+              proxy_read_timeout 300;
           }
 
           # Health check endpoint (no auth needed for monitoring)
