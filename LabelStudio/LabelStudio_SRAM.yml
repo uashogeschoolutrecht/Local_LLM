@@ -15,6 +15,30 @@
     # The nginx plugin will handle SSL/TLS and basic auth setup
 
   pre_tasks:
+    # ============================================================
+    # Detect Public URL from RSC Environment
+    # ============================================================
+    - name: Check if RSC nginx service URL is set
+      shell: |
+        if [ -f /etc/nginx/sites-enabled/default ]; then
+          grep -oP 'server_name\s+\K[^;]+' /etc/nginx/sites-enabled/default | head -1
+        elif [ ! -z "$rsc_nginx_service_url" ]; then
+          echo "$rsc_nginx_service_url"
+        else
+          hostname -f
+        fi
+      register: detected_url
+      changed_when: false
+      failed_when: false
+
+    - name: Set public URL variable
+      set_fact:
+        public_url: "{{ detected_url.stdout | default(ansible_fqdn) }}"
+
+    - name: Display detected URL
+      debug:
+        msg: "Using public URL: {{ public_url }}"
+
     - name: Wait for system to become reachable
       wait_for_connection:
         timeout: 300
@@ -170,14 +194,14 @@
                 # Security & CSRF Settings
                 # ===========================================
                 - LABEL_STUDIO_DISABLE_SIGNUP_WITHOUT_LINK=true
-                - CSRF_TRUSTED_ORIGINS=https://{{ rsc_nginx_service_url | default(ansible_fqdn) }},https://*.surf-hosted.nl,https://*.src.surf-hosted.nl
-                - DJANGO_CSRF_TRUSTED_ORIGINS=https://{{ rsc_nginx_service_url | default(ansible_fqdn) }},https://*.surf-hosted.nl,https://*.src.surf-hosted.nl
+                - CSRF_TRUSTED_ORIGINS=https://{{ public_url }},https://*.surf-hosted.nl,https://*.src.surf-hosted.nl
+                - DJANGO_CSRF_TRUSTED_ORIGINS=https://{{ public_url }},https://*.surf-hosted.nl,https://*.src.surf-hosted.nl
                 
                 # ===========================================
                 # Application settings
-                # Note: Uses rsc_nginx_service_url from RSC, falls back to system FQDN
+                # Note: Auto-detects public URL from nginx configuration
                 # ===========================================
-                - LABEL_STUDIO_HOST=https://{{ rsc_nginx_service_url | default(ansible_fqdn) }}
+                - LABEL_STUDIO_HOST=https://{{ public_url }}
                 - LABEL_STUDIO_USER_DEFAULT_ROLE=annotator
                 
                 # ===========================================
@@ -388,7 +412,7 @@
           - "=================================="
           - "Label Studio Deployment Complete"
           - "=================================="
-          - "Service URL: https://{{ rsc_nginx_service_url | default('your-domain.nl') }}"
+          - "Service URL: https://{{ public_url }}"
           - "Version: {{ label_studio_version }}"
           - ""
           - "Authentication: SRAM SSO"
